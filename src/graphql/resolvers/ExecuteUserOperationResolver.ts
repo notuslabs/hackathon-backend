@@ -1,6 +1,12 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Field, Mutation, ObjectType, Resolver } from '@nestjs/graphql';
 import { ExecuteUserOperationService } from 'src/services/ExecuteUserOperationService';
 import { UserOperationModel } from '../models/UserOperationModel';
+
+@ObjectType()
+export class ExecuteUserOperationOutput {
+  @Field(() => String)
+  operationHash: string;
+}
 
 @Resolver()
 export class ExecuteUserOperationResolver {
@@ -8,14 +14,16 @@ export class ExecuteUserOperationResolver {
     private executeUserOperationService: ExecuteUserOperationService,
   ) {}
 
-  @Mutation(() => String)
+  @Mutation(() => ExecuteUserOperationOutput)
   async userOperationExecute(
     @Args('userOperation') userOperation: UserOperationModel,
-  ): Promise<string> {
-    const opHash = await this.executeUserOperationService.execute({
+  ): Promise<ExecuteUserOperationOutput> {
+    const operationHash = await this.executeUserOperationService.execute({
       userOperation,
     });
 
-    return opHash;
+    return {
+      operationHash,
+    };
   }
 }
