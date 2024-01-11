@@ -1,0 +1,50 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type UserOperationModel {
+  callData: String!
+  sender: String!
+  signature: String!
+  initCode: String!
+  paymasterAndData: String!
+  maxFeePerGas: BigInt!
+  maxPriorityFeePerGas: BigInt!
+  nonce: BigInt!
+  callGasLimit: BigInt!
+  preVerificationGas: BigInt!
+  verificationGasLimit: BigInt!
+}
+
+"""Numbers with no precision loss"""
+scalar BigInt
+
+input UserOperationInput {
+  callData: String!
+  sender: String!
+  signature: String!
+  initCode: String!
+  paymasterAndData: String!
+  maxFeePerGas: BigInt!
+  maxPriorityFeePerGas: BigInt!
+  nonce: BigInt!
+  callGasLimit: BigInt!
+  preVerificationGas: BigInt!
+  verificationGasLimit: BigInt!
+}
+
+type Query {
+  balanceByCurrency(address: String!, currency: Currency!): BigInt!
+  accountAbstractionAddressByOwner(owner: String!): String!
+}
+
+"""The supported currencies"""
+enum Currency {
+  USDC
+  BRZ
+}
+
+type Mutation {
+  createUserOperationTransfer(accountAbstractionAddress: String!, amount: String!, currency: Currency!, from: String!, to: String!): UserOperationModel!
+  userOperationExecute(userOperation: UserOperationInput!): String!
+}
