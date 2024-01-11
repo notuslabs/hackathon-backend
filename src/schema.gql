@@ -2,6 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type GetBalanceOutput {
+  balance: BigInt!
+  formattedBalance: String!
+}
+
+"""Numbers with no precision loss"""
+scalar BigInt
+
 type UserOperationModel {
   callData: String!
   sender: String!
@@ -15,9 +23,6 @@ type UserOperationModel {
   preVerificationGas: BigInt!
   verificationGasLimit: BigInt!
 }
-
-"""Numbers with no precision loss"""
-scalar BigInt
 
 input UserOperationInput {
   callData: String!
@@ -34,7 +39,7 @@ input UserOperationInput {
 }
 
 type Query {
-  balanceByCurrency(address: String!, currency: Currency!): BigInt!
+  balanceByCurrency(address: String!, currency: Currency!): GetBalanceOutput!
   accountAbstractionAddressByOwner(owner: String!): String!
 }
 
