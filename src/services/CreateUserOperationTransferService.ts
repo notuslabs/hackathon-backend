@@ -2,25 +2,16 @@ import 'dotenv/config';
 import { ERC20 } from 'src/abis/ERC20';
 import { Currency } from 'src/types/currency';
 import { Hexadecimal } from 'src/types/hexadecimal';
-import {
-  PublicClient,
-  concatHex,
-  createPublicClient,
-  encodeFunctionData,
-  getContract,
-  http,
-  parseUnits,
-} from 'viem';
+import { concatHex, encodeFunctionData, getContract, parseUnits } from 'viem';
 import { currencyDecimals } from './GetBalanceService';
 import { AlchemyLightAccountABI } from 'src/abis/AlchemyLightAccount';
 import { currencyToTokenAddress } from 'src/utils/currencyToTokenAddress';
 import { ENTRY_POINT_ADDRESS, FACTORY_ADDRESS } from 'src/constants';
 import { SimpleAccountFactoryAbi } from 'src/abis/SimpleAccountFactory';
-import { polygon, polygonMumbai } from 'viem/chains';
 import { BadGatewayException, Injectable } from '@nestjs/common';
 import { ERC4337 } from 'src/abis/ERC4337';
-import { BundlerActions, bundlerActions } from 'permissionless';
 import { UserOperation } from 'src/types/useroperation';
+import { alchemyClient } from 'src/utils/clients';
 
 export type CreateUserOperationTransferInput = {
   to: Hexadecimal;
@@ -32,15 +23,6 @@ export type CreateUserOperationTransferInput = {
 
 @Injectable()
 export class CreateUserOperationTransferService {
-  #client: PublicClient & BundlerActions;
-
-  constructor() {
-    this.#client = createPublicClient({
-      chain: process.env.NODE_ENV === 'production' ? polygon : polygonMumbai,
-      transport: http(process.env.ALCHEMY_HTTP_API_URL),
-    }).extend(bundlerActions);
-  }
-
   async execute({
     to,
     amount,
@@ -63,7 +45,7 @@ export class CreateUserOperationTransferService {
     const contract = getContract({
       abi: ERC4337,
       address: ENTRY_POINT_ADDRESS,
-      publicClient: this.#client,
+      publicClient: alchemyClient,
     });
 
     const [
@@ -72,9 +54,9 @@ export class CreateUserOperationTransferService {
       isAccountAbstractionDeployed,
       nonce,
     ] = await Promise.all([
-      this.#client.estimateFeesPerGas(),
-      this.#client.getGasPrice(),
-      this.#client.getBytecode({
+      alchemyClient.estimateFeesPerGas(),
+      alchemyClient.getGasPrice(),
+      alchemyClient.getBytecode({
         address: accountAbstractionAddress,
       }),
       contract.read.getNonce([from, 0n]),
@@ -111,7 +93,7 @@ export class CreateUserOperationTransferService {
     };
 
     const { callGasLimit, preVerificationGas, verificationGasLimit } =
-      await this.#client.estimateUserOperationGas({
+      await alchemyClient.estimateUserOperationGas({
         entryPoint: ENTRY_POINT_ADDRESS,
         userOperation: userOperation,
       });
