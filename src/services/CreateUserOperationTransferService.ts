@@ -12,6 +12,7 @@ import { BadGatewayException, Injectable } from '@nestjs/common';
 import { ERC4337 } from 'src/abis/ERC4337';
 import { UserOperation } from 'src/types/useroperation';
 import { alchemyClient } from 'src/utils/clients';
+import { bigIntMax, bigIntPercent } from 'src/utils/bigint';
 
 export type CreateUserOperationTransferInput = {
   to: Hexadecimal;
@@ -48,21 +49,17 @@ export class CreateUserOperationTransferService {
       publicClient: alchemyClient,
     });
 
-    const [
-      { maxFeePerGas, maxPriorityFeePerGas },
-      gasPrice,
-      isAccountAbstractionDeployed,
-      nonce,
-    ] = await Promise.all([
-      alchemyClient.estimateFeesPerGas(),
-      alchemyClient.getGasPrice(),
-      alchemyClient.getBytecode({
-        address: accountAbstractionAddress,
-      }),
-      contract.read.getNonce([accountAbstractionAddress, 0n]),
-    ]);
+    const [maxPriorityFeePerGas, feeData, isAccountAbstractionDeployed, nonce] =
+      await Promise.all([
+        alchemyClient.estimateMaxPriorityFeePerGas(),
+        alchemyClient.estimateFeesPerGas(),
+        alchemyClient.getBytecode({
+          address: accountAbstractionAddress,
+        }),
+        contract.read.getNonce([accountAbstractionAddress, 0n]),
+      ]);
 
-    if (!maxFeePerGas || !maxPriorityFeePerGas || !gasPrice) {
+    if (!feeData.maxFeePerGas || !feeData.maxPriorityFeePerGas) {
       throw new BadGatewayException('Could not estimate fees. Received null.');
     }
 
@@ -78,14 +75,24 @@ export class CreateUserOperationTransferService {
       ]);
     }
 
+    const maxPriorityFeePerGasBid = bigIntMax(
+      bigIntPercent(maxPriorityFeePerGas, BigInt(133)),
+      100_000_000n,
+    ); // Add 33% to the maxPriorityFeePerGas or 100_000_000 wei (min required by EIP-1559)
+
+    const maxFeePerGasBid =
+      BigInt(feeData.maxFeePerGas) -
+      BigInt(feeData.maxPriorityFeePerGas) +
+      maxPriorityFeePerGasBid;
+
     const userOperation: UserOperation = {
       callData: executeTransferData,
       sender: accountAbstractionAddress,
       signature: '0x' as Hexadecimal,
       initCode,
       paymasterAndData: '0x' as Hexadecimal,
-      maxFeePerGas: (gasPrice + maxPriorityFeePerGas) * 2n,
-      maxPriorityFeePerGas: maxPriorityFeePerGas * 2n,
+      maxFeePerGas: maxFeePerGasBid,
+      maxPriorityFeePerGas: maxPriorityFeePerGasBid,
       nonce: nonce,
       callGasLimit: 0n,
       preVerificationGas: 0n,
