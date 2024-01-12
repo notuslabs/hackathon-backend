@@ -24,6 +24,11 @@ type UserOperationModel {
   verificationGasLimit: BigInt!
 }
 
+type CreateUserOperationTransferOutput {
+  userOperation: UserOperationModel!
+  chainId: Int!
+}
+
 type GetAccountAbstractionAddressByOwnerOutput {
   accountAbstractionAddress: String!
 }
@@ -58,6 +63,6 @@ enum Currency {
 }
 
 type Mutation {
-  createUserOperationTransfer(accountAbstractionAddress: String!, amount: String!, currency: Currency!, from: String!, to: String!): UserOperationModel!
+  createUserOperationTransfer(accountAbstractionAddress: String!, amount: String!, currency: Currency!, from: String!, to: String!): CreateUserOperationTransferOutput!
   userOperationExecute(userOperation: UserOperationInput!): ExecuteUserOperationOutput!
 }

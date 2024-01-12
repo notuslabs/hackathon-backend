@@ -1,12 +1,22 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Field,
+  Int,
+  Mutation,
+  ObjectType,
+  Resolver,
+} from '@nestjs/graphql';
 import { UserOperationModel } from '../models/UserOperationModel';
 import { CreateUserOperationTransferService } from 'src/services/CreateUserOperationTransferService';
 import { Hexadecimal } from 'src/types/hexadecimal';
 import { Currency } from 'src/types/currency';
 import { chain } from 'src/utils/clients';
 
+@ObjectType()
 export class CreateUserOperationTransferOutput {
+  @Field(() => UserOperationModel)
   userOperation: UserOperationModel;
+  @Field(() => Int)
   chainId: number;
 }
 
