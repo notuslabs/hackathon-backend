@@ -6,7 +6,7 @@ import { HexadecimalScalar } from '../scalars/Hexadecimal';
 @ObjectType()
 export class GetAccountAbstractionAddressByOwnerOutput {
   @Field(() => HexadecimalScalar)
-  accountAbstractionAddress: string;
+  accountAbstractionAddress: Hexadecimal;
 }
 
 @Resolver()
