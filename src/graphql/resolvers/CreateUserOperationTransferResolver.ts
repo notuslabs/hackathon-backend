@@ -16,7 +16,7 @@ export class CreateUserOperationTransferResolver {
     private createUserOperationTransferService: CreateUserOperationTransferService,
   ) {}
 
-  @Mutation(() => UserOperationModel)
+  @Mutation(() => CreateUserOperationTransferOutput)
   async createUserOperationTransfer(
     @Args('accountAbstractionAddress') accountAbstractionAddress: Hexadecimal,
     @Args('amount') amount: string,
