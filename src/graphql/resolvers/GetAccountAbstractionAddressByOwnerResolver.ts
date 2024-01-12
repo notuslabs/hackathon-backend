@@ -1,10 +1,11 @@
 import { Resolver, Query, Args, ObjectType, Field } from '@nestjs/graphql';
 import { GetAccountAbstractionAddressByOwnerService } from 'src/services/GetAccountAbstractionAddressByOwnerService';
 import { Hexadecimal } from 'src/types/hexadecimal';
+import { HexadecimalScalar } from '../scalars/Hexadecimal';
 
 @ObjectType()
 export class GetAccountAbstractionAddressByOwnerOutput {
-  @Field(() => String)
+  @Field(() => HexadecimalScalar)
   accountAbstractionAddress: string;
 }
 
@@ -16,7 +17,7 @@ export class GetAccountAbstractionAddressByOwnerResolver {
 
   @Query(() => GetAccountAbstractionAddressByOwnerOutput)
   async accountAbstractionAddressByOwner(
-    @Args('owner') owner: Hexadecimal,
+    @Args('owner', { type: () => HexadecimalScalar }) owner: Hexadecimal,
   ): Promise<GetAccountAbstractionAddressByOwnerOutput> {
     const accountAbstractionAddress =
       await this.getAccountAbstractionAddressByOwnerService.execute({

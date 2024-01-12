@@ -1,19 +1,20 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { Hexadecimal } from 'src/types/hexadecimal';
 import { BigIntScalar } from '../scalars/BigInt';
+import { HexadecimalScalar } from '../scalars/Hexadecimal';
 
 @InputType('UserOperationInput')
 @ObjectType()
 export class UserOperationModel {
-  @Field(() => String)
+  @Field(() => HexadecimalScalar)
   callData: Hexadecimal;
-  @Field(() => String)
+  @Field(() => HexadecimalScalar)
   sender: Hexadecimal;
-  @Field(() => String)
+  @Field(() => HexadecimalScalar)
   signature: Hexadecimal;
-  @Field(() => String)
+  @Field(() => HexadecimalScalar)
   initCode: Hexadecimal;
-  @Field(() => String)
+  @Field(() => HexadecimalScalar)
   paymasterAndData: Hexadecimal;
   @Field(() => BigIntScalar)
   maxFeePerGas: bigint;

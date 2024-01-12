@@ -11,11 +11,11 @@ type GetBalanceOutput {
 scalar BigInt
 
 type UserOperationModel {
-  callData: String!
-  sender: String!
-  signature: String!
-  initCode: String!
-  paymasterAndData: String!
+  callData: Hexadecimal!
+  sender: Hexadecimal!
+  signature: Hexadecimal!
+  initCode: Hexadecimal!
+  paymasterAndData: Hexadecimal!
   maxFeePerGas: BigInt!
   maxPriorityFeePerGas: BigInt!
   nonce: BigInt!
@@ -24,25 +24,28 @@ type UserOperationModel {
   verificationGasLimit: BigInt!
 }
 
+"""Any string that starts with 0x"""
+scalar Hexadecimal
+
 type CreateUserOperationTransferOutput {
   userOperation: UserOperationModel!
   chainId: Int!
 }
 
 type GetAccountAbstractionAddressByOwnerOutput {
-  accountAbstractionAddress: String!
+  accountAbstractionAddress: Hexadecimal!
 }
 
 type ExecuteUserOperationOutput {
-  operationHash: String!
+  operationHash: Hexadecimal!
 }
 
 input UserOperationInput {
-  callData: String!
-  sender: String!
-  signature: String!
-  initCode: String!
-  paymasterAndData: String!
+  callData: Hexadecimal!
+  sender: Hexadecimal!
+  signature: Hexadecimal!
+  initCode: Hexadecimal!
+  paymasterAndData: Hexadecimal!
   maxFeePerGas: BigInt!
   maxPriorityFeePerGas: BigInt!
   nonce: BigInt!
@@ -52,17 +55,18 @@ input UserOperationInput {
 }
 
 type Query {
-  balanceByCurrency(address: String!, currency: Currency!): GetBalanceOutput!
-  accountAbstractionAddressByOwner(owner: String!): GetAccountAbstractionAddressByOwnerOutput!
+  balanceByCurrency(address: Hexadecimal!, currency: Currency!): GetBalanceOutput!
+  accountAbstractionAddressByOwner(owner: Hexadecimal!): GetAccountAbstractionAddressByOwnerOutput!
 }
 
 """The supported currencies"""
 enum Currency {
   USDC
   BRZ
+  JOJO
 }
 
 type Mutation {
-  createUserOperationTransfer(accountAbstractionAddress: String!, amount: String!, currency: Currency!, from: String!, to: String!): CreateUserOperationTransferOutput!
+  createUserOperationTransfer(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: Currency!, from: Hexadecimal!, to: Hexadecimal!): CreateUserOperationTransferOutput!
   userOperationExecute(userOperation: UserOperationInput!): ExecuteUserOperationOutput!
 }

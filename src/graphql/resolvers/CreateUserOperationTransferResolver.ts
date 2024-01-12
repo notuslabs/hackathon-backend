@@ -11,6 +11,7 @@ import { CreateUserOperationTransferService } from 'src/services/CreateUserOpera
 import { Hexadecimal } from 'src/types/hexadecimal';
 import { Currency } from 'src/types/currency';
 import { chain } from 'src/utils/clients';
+import { HexadecimalScalar } from '../scalars/Hexadecimal';
 
 @ObjectType()
 export class CreateUserOperationTransferOutput {
@@ -28,11 +29,12 @@ export class CreateUserOperationTransferResolver {
 
   @Mutation(() => CreateUserOperationTransferOutput)
   async createUserOperationTransfer(
-    @Args('accountAbstractionAddress') accountAbstractionAddress: Hexadecimal,
+    @Args('accountAbstractionAddress', { type: () => HexadecimalScalar })
+    accountAbstractionAddress: Hexadecimal,
     @Args('amount') amount: string,
     @Args('currency', { type: () => Currency }) currency: Currency,
-    @Args('from') from: Hexadecimal,
-    @Args('to') to: Hexadecimal,
+    @Args('from', { type: () => HexadecimalScalar }) from: Hexadecimal,
+    @Args('to', { type: () => HexadecimalScalar }) to: Hexadecimal,
   ): Promise<CreateUserOperationTransferOutput> {
     const { userOperation } =
       await this.createUserOperationTransferService.execute({

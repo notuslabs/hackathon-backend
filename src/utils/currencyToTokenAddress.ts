@@ -6,5 +6,7 @@ export function currencyToTokenAddress(currency: Currency): `0x${string}` {
       return '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359';
     case Currency.BRZ:
       return '0x4eD141110F6EeeAbA9A1df36d8c26f684d2475Dc';
+    case Currency.JOJO:
+      return '0x907F41fE794Fe0e3562C2c3B4F35D782aDfF225F';
   }
 }
