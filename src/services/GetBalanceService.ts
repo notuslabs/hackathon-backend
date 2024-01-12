@@ -3,9 +3,14 @@ import { ERC20 } from 'src/abis/ERC20';
 import { Currency } from 'src/types/currency';
 import { Hexadecimal } from 'src/types/hexadecimal';
 import { currencyToTokenAddress } from 'src/utils/currencyToTokenAddress';
-import { PublicClient, createPublicClient, getContract, http } from 'viem';
+import {
+  PublicClient,
+  createPublicClient,
+  formatUnits,
+  getContract,
+  http,
+} from 'viem';
 import { polygonMumbai, polygon } from 'viem/chains';
-import { BigNumber } from 'bignumber.js';
 
 export const currencyDecimals: Record<Currency, number> = {
   [Currency.USDC]: 6,
@@ -39,9 +44,7 @@ export class GetBalanceService {
 
     return {
       balance,
-      formattedBalance: BigNumber(balance.toString())
-        .div(10 ** currencyDecimals[currency])
-        .toString(),
+      formattedBalance: formatUnits(balance, currencyDecimals[currency]),
     };
   }
 }
