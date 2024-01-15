@@ -12,6 +12,8 @@ import { GetAccountAbstractionAddressByOwnerService } from './services/GetAccoun
 import { ExecuteUserOperationResolver } from './graphql/resolvers/ExecuteUserOperationResolver';
 import { ExecuteUserOperationService } from './services/ExecuteUserOperationService';
 import { BigIntScalar } from './graphql/scalars/BigInt';
+import { APP_FILTER } from '@nestjs/core';
+import { HttpExceptionFilter } from './HttpExceptionFilter';
 
 registerEnumType(Currency, {
   name: 'Currency',
@@ -43,6 +45,11 @@ registerEnumType(Currency, {
 
     ExecuteUserOperationResolver,
     ExecuteUserOperationService,
+
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
   ],
 })
 export class AppModule {}

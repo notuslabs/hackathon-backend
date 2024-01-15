@@ -49,19 +49,36 @@ export class CreateUserOperationTransferService {
       publicClient: alchemyClient,
     });
 
-    const [maxPriorityFeePerGas, feeData, isAccountAbstractionDeployed, nonce] =
-      await Promise.all([
-        alchemyClient.estimateMaxPriorityFeePerGas(),
-        alchemyClient.estimateFeesPerGas(),
-        alchemyClient.getBytecode({
-          address: accountAbstractionAddress,
-        }),
-        contract.read.getNonce([accountAbstractionAddress, 0n]),
-      ]);
+    const [
+      { baseFeePerGas },
+      priorityFeePerGas,
+      isAccountAbstractionDeployed,
+      nonce,
+    ] = await Promise.all([
+      alchemyClient.getBlock({
+        blockTag: 'latest',
+      }),
+      alchemyClient.request<{
+        Method: 'rundler_maxPriorityFeePerGas';
+        Parameters?: undefined;
+        ReturnType: string;
+      }>({
+        method: 'rundler_maxPriorityFeePerGas',
+      }),
+      alchemyClient.getBytecode({
+        address: accountAbstractionAddress,
+      }),
+      contract.read.getNonce([accountAbstractionAddress, 0n]),
+    ]);
 
-    if (!feeData.maxFeePerGas || !feeData.maxPriorityFeePerGas) {
+    if (!baseFeePerGas) {
       throw new BadGatewayException('Could not estimate fees. Received null.');
     }
+
+    const baseFeePlusFiftyPercent = (baseFeePerGas * (100n + 50n)) / 100n;
+
+    const prioFeePlusFivePercent =
+      (BigInt(priorityFeePerGas) * (100n + 5n)) / 100n;
 
     let initCode: `0x${string}` = '0x';
     if (!isAccountAbstractionDeployed) {
@@ -75,24 +92,14 @@ export class CreateUserOperationTransferService {
       ]);
     }
 
-    const maxPriorityFeePerGasBid = bigIntMax(
-      bigIntPercent(maxPriorityFeePerGas, BigInt(133)),
-      100_000_000n,
-    ); // Add 33% to the maxPriorityFeePerGas or 100_000_000 wei (min required by EIP-1559)
-
-    const maxFeePerGasBid =
-      BigInt(feeData.maxFeePerGas) -
-      BigInt(feeData.maxPriorityFeePerGas) +
-      maxPriorityFeePerGasBid;
-
     const userOperation: UserOperation = {
       callData: executeTransferData,
       sender: accountAbstractionAddress,
       signature: '0x' as Hexadecimal,
       initCode,
       paymasterAndData: '0x' as Hexadecimal,
-      maxFeePerGas: maxFeePerGasBid,
-      maxPriorityFeePerGas: maxPriorityFeePerGasBid,
+      maxFeePerGas: baseFeePlusFiftyPercent + prioFeePlusFivePercent,
+      maxPriorityFeePerGas: prioFeePlusFivePercent,
       nonce: nonce,
       callGasLimit: 0n,
       preVerificationGas: 0n,
