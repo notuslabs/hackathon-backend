@@ -68,7 +68,10 @@ export class CreateUserOperationTransferService {
       alchemyClient.getBytecode({
         address: accountAbstractionAddress,
       }),
-      contract.read.getNonce([accountAbstractionAddress, 0n]),
+      contract.read.getNonce([
+        accountAbstractionAddress,
+        BigInt(Date.now()) << 64n,
+      ]),
     ]);
 
     if (!baseFeePerGas) {
@@ -100,12 +103,11 @@ export class CreateUserOperationTransferService {
       paymasterAndData: '0x' as Hexadecimal,
       maxFeePerGas: baseFeePlusFiftyPercent + prioFeePlusFivePercent,
       maxPriorityFeePerGas: prioFeePlusFivePercent,
-      nonce: nonce,
+      nonce,
       callGasLimit: 0n,
       preVerificationGas: 0n,
       verificationGasLimit: 0n,
     };
-
     const { callGasLimit, preVerificationGas, verificationGasLimit } =
       await alchemyClient.estimateUserOperationGas({
         entryPoint: ENTRY_POINT_ADDRESS,
