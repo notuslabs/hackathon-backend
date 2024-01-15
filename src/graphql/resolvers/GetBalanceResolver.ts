@@ -3,6 +3,7 @@ import { GetBalanceService } from 'src/services/GetBalanceService';
 import { Currency } from 'src/types/currency';
 import { BigIntScalar } from '../scalars/BigInt';
 import { HexadecimalScalar } from '../scalars/Hexadecimal';
+import { Hexadecimal } from 'src/types/hexadecimal';
 
 @ObjectType()
 export class GetBalanceOutput {
@@ -18,7 +19,7 @@ export class GetBalanceResolver {
 
   @Query(() => GetBalanceOutput)
   async balanceByCurrency(
-    @Args('address', { type: () => HexadecimalScalar }) address: `0x${string}`,
+    @Args('address', { type: () => HexadecimalScalar }) address: Hexadecimal,
     @Args('currency', { type: () => Currency }) currency: Currency,
   ) {
     return await this.getBalanceService.execute({
