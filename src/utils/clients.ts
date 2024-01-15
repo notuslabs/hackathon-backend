@@ -7,5 +7,8 @@ export const chain =
 
 export const alchemyClient = createPublicClient({
   chain,
+  batch: {
+    multicall: true,
+  },
   transport: http(process.env.ALCHEMY_HTTP_API_URL),
 }).extend(bundlerActions);
