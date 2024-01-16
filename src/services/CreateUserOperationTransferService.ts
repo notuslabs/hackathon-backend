@@ -1,9 +1,8 @@
 import 'dotenv/config';
 import { ERC20 } from 'src/abis/ERC20';
-import { Currency } from 'src/types/currency';
+import { Currency, currencyDecimals } from 'src/types/currency';
 import { Hexadecimal } from 'src/types/hexadecimal';
 import { concatHex, encodeFunctionData, getContract, parseUnits } from 'viem';
-import { currencyDecimals } from './GetBalanceService';
 import { AlchemyLightAccountABI } from 'src/abis/AlchemyLightAccount';
 import { currencyToTokenAddress } from 'src/utils/currencyToTokenAddress';
 import { ENTRY_POINT_ADDRESS, FACTORY_ADDRESS } from 'src/constants';
@@ -12,7 +11,6 @@ import { BadGatewayException, Injectable } from '@nestjs/common';
 import { ERC4337 } from 'src/abis/ERC4337';
 import { UserOperation } from 'src/types/useroperation';
 import { alchemyClient } from 'src/utils/clients';
-import { bigIntMax, bigIntPercent } from 'src/utils/bigint';
 
 export type CreateUserOperationTransferInput = {
   to: Hexadecimal;

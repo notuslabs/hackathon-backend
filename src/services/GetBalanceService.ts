@@ -1,16 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ERC20 } from 'src/abis/ERC20';
-import { Currency } from 'src/types/currency';
+import { Currency, currencyDecimals } from 'src/types/currency';
 import { Hexadecimal } from 'src/types/hexadecimal';
 import { alchemyClient } from 'src/utils/clients';
 import { currencyToTokenAddress } from 'src/utils/currencyToTokenAddress';
 import { formatUnits, getContract } from 'viem';
-
-export const currencyDecimals: Record<Currency, number> = {
-  [Currency.USDC]: 6,
-  [Currency.BRZ]: 18,
-  [Currency.JOJO]: 18,
-};
 
 export type GetBalanceInput = {
   currency: Currency;
