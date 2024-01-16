@@ -1,5 +1,6 @@
 import { bundlerActions } from 'permissionless';
-import { createPublicClient, http } from 'viem';
+import { createPublicClient, createWalletClient, http } from 'viem';
+import { privateKeyToAccount } from 'viem/accounts';
 import { polygon, polygonMumbai } from 'viem/chains';
 
 export const chain =
@@ -12,3 +13,11 @@ export const alchemyClient = createPublicClient({
   },
   transport: http(process.env.ALCHEMY_HTTP_API_URL),
 }).extend(bundlerActions);
+
+export const investmentWalletClient = createWalletClient({
+  chain,
+  transport: http(process.env.ALCHEMY_HTTP_API_URL),
+  account: privateKeyToAccount(
+    process.env.WALLET_INVESTMENT_POOL_PRIVATE_KEY as `0x${string}`,
+  ),
+});

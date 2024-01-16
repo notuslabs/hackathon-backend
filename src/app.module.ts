@@ -14,6 +14,8 @@ import { ExecuteUserOperationService } from './services/ExecuteUserOperationServ
 import { BigIntScalar } from './graphql/scalars/BigInt';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './HttpExceptionFilter';
+import { TransferListener } from './listeners/TransferListener';
+import { SwapStableCoinsToInvestmentTokensService } from './services/SwapStableCoinsToInvestmentTokensService';
 
 registerEnumType(Currency, {
   name: 'Currency',
@@ -34,6 +36,9 @@ registerEnumType(Currency, {
   ],
   controllers: [],
   providers: [
+    TransferListener,
+    SwapStableCoinsToInvestmentTokensService,
+
     GetBalanceResolver,
     GetBalanceService,
 
