@@ -8,13 +8,13 @@ export type SwapStableCoinsToInvestmentTokensInput = {
   sendTo: Hexadecimal;
 };
 
-const BCSPX = '0x63161be482f7143Ebc407717DB2453D58d74a841';
+const BIB01 = '0xA5c445c85089FF8AbF5C960842a4cF23669AE6D4';
 
 export class SwapStableCoinsToInvestmentTokensService {
   async execute({ amount, sendTo }: SwapStableCoinsToInvestmentTokensInput) {
     const BCSPXToken = getContract({
       abi: ERC20,
-      address: BCSPX, // Backed IB01 $ Treasury Bond 0-1yr (bIB01)
+      address: BIB01, // Backed IB01 $ Treasury Bond 0-1yr (bIB01)
       walletClient: investmentWalletClient,
     });
 

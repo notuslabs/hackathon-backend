@@ -4,7 +4,7 @@ import { SwapStableCoinsToInvestmentTokensService } from 'src/services/SwapStabl
 import { alchemyClient } from 'src/utils/clients';
 import { getAllTokenAddresses } from 'src/utils/getAllTokenAddresses';
 
-const PRICE_BCSPX = 475070000n;
+const PRICE_BIB01 = 107700000n;
 const PRICE_USD_BRL = 49000000n;
 const BRZ = '0x35928a20EfA22EA35dCde06Ac201440aAd2fEC05'.toLocaleLowerCase();
 
@@ -25,13 +25,13 @@ export class TransferListener {
             continue;
           }
 
-          const BCSPX =
+          const BIB01 =
             event.address === BRZ
-              ? event.args.value / PRICE_USD_BRL / PRICE_BCSPX
-              : (event.args.value * 1000000n) / PRICE_BCSPX;
+              ? event.args.value / PRICE_USD_BRL / PRICE_BIB01
+              : (event.args.value * 1000000n) / PRICE_BIB01;
 
           await this.swapStableCoinsToInvestmentTokensService.execute({
-            amount: BCSPX,
+            amount: BIB01,
             sendTo: event.args.from,
           });
         }
