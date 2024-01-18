@@ -5,7 +5,7 @@ export function currencyToTokenAddress(currency: Currency): `0x${string}` {
     case Currency.USDC:
       return process.env.NODE_ENV === 'production'
         ? '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359'
-        : '0x19446E248a62c3CD08498F9607061F7C8f1704aF';
+        : '0xCb283a7521626eB30504357949f40E4F1e67cc38';
     case Currency.BRZ:
       return process.env.NODE_ENV === 'production'
         ? '0x4eD141110F6EeeAbA9A1df36d8c26f684d2475Dc'

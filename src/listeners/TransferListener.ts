@@ -4,7 +4,7 @@ import { SwapStableCoinsToInvestmentTokensService } from 'src/services/SwapStabl
 import { alchemyClient } from 'src/utils/clients';
 import { getAllTokenAddresses } from 'src/utils/getAllTokenAddresses';
 
-const PRICE_BIB01 = 107700000n;
+const PRICE_BIB01 = 107000000n;
 const PRICE_USD_BRL = 49000000n;
 const BRZ = '0x35928a20EfA22EA35dCde06Ac201440aAd2fEC05'.toLocaleLowerCase();
 
