@@ -40,6 +40,12 @@ type ExecuteUserOperationOutput {
   operationHash: Hexadecimal!
 }
 
+type QuoteModel {
+  quoteId: String!
+  price: Float!
+  expireAt: String!
+}
+
 input UserOperationInput {
   callData: Hexadecimal!
   sender: Hexadecimal!
@@ -64,9 +70,11 @@ enum Currency {
   USDC
   BRZ
   JOJO
+  BIB01
 }
 
 type Mutation {
   createUserOperationTransfer(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: Currency!, from: Hexadecimal!, to: Hexadecimal!): CreateUserOperationTransferOutput!
   userOperationExecute(userOperation: UserOperationInput!): ExecuteUserOperationOutput!
+  requestSellQuote(from: String!, to: String!, amount: Float!): QuoteModel!
 }

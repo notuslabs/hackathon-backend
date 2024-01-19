@@ -16,6 +16,10 @@ import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './HttpExceptionFilter';
 import { TransferListener } from './listeners/TransferListener';
 import { SwapStableCoinsToInvestmentTokensService } from './services/SwapStableCoinsToInvestmentTokensService';
+import { CacheModule } from '@nestjs/cache-manager';
+import { RequestSellQuoteResolver } from './graphql/resolvers/RequestSellQuoteResolver';
+import { RequestSellQuoteService } from './services/RequestSellQuoteService';
+import { TransferoClient } from './TransferoClient';
 
 registerEnumType(Currency, {
   name: 'Currency',
@@ -24,6 +28,7 @@ registerEnumType(Currency, {
 
 @Module({
   imports: [
+    CacheModule.register(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       resolvers: {
@@ -36,6 +41,8 @@ registerEnumType(Currency, {
   ],
   controllers: [],
   providers: [
+    TransferoClient,
+
     TransferListener,
     SwapStableCoinsToInvestmentTokensService,
 
@@ -50,6 +57,9 @@ registerEnumType(Currency, {
 
     ExecuteUserOperationResolver,
     ExecuteUserOperationService,
+
+    RequestSellQuoteResolver,
+    RequestSellQuoteService,
 
     {
       provide: APP_FILTER,
