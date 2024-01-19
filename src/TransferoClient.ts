@@ -59,7 +59,7 @@ export class TransferoClient {
     await this.cacheManager.set(
       'transfero_access_token',
       access_token,
-      expires_in * 1000,
+      (expires_in - 120) * 1000, // 120 seconds before expiration
     );
     return access_token;
   }
