@@ -17,8 +17,8 @@ import { HttpExceptionFilter } from './HttpExceptionFilter';
 import { TransferListener } from './listeners/TransferListener';
 import { SwapStableCoinsToInvestmentTokensService } from './services/SwapStableCoinsToInvestmentTokensService';
 import { CacheModule } from '@nestjs/cache-manager';
-import { RequestSellQuoteResolver } from './graphql/resolvers/RequestSellQuoteResolver';
-import { RequestSellQuoteService } from './services/RequestSellQuoteService';
+import { RequestQuoteResolver } from './graphql/resolvers/RequestQuoteResolver';
+import { RequestQuoteService } from './services/RequestQuoteService';
 import { TransferoClient } from './TransferoClient';
 
 registerEnumType(Currency, {
@@ -58,8 +58,8 @@ registerEnumType(Currency, {
     ExecuteUserOperationResolver,
     ExecuteUserOperationService,
 
-    RequestSellQuoteResolver,
-    RequestSellQuoteService,
+    RequestQuoteResolver,
+    RequestQuoteService,
 
     {
       provide: APP_FILTER,

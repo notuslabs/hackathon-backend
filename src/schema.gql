@@ -76,5 +76,5 @@ enum Currency {
 type Mutation {
   createUserOperationTransfer(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: Currency!, from: Hexadecimal!, to: Hexadecimal!): CreateUserOperationTransferOutput!
   userOperationExecute(userOperation: UserOperationInput!): ExecuteUserOperationOutput!
-  requestSellQuote(from: String!, to: String!, amount: Float!): QuoteModel!
+  requestQuote(from: String!, to: String!, amount: Float!): QuoteModel!
 }

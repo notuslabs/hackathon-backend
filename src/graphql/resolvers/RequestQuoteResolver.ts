@@ -1,13 +1,13 @@
 import { Resolver, Mutation, Args } from '@nestjs/graphql';
-import { RequestSellQuoteService } from 'src/services/RequestSellQuoteService';
+import { RequestQuoteService } from 'src/services/RequestQuoteService';
 import { QuoteModel } from '../models/QuoteModel';
 
 @Resolver()
-export class RequestSellQuoteResolver {
-  constructor(private requestSelQuoteService: RequestSellQuoteService) {}
+export class RequestQuoteResolver {
+  constructor(private requestSelQuoteService: RequestQuoteService) {}
 
   @Mutation(() => QuoteModel)
-  async requestSellQuote(
+  async requestQuote(
     @Args('from') from: string,
     @Args('to') to: string,
     @Args('amount') amount: number,
