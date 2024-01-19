@@ -5,7 +5,7 @@ import { alchemyClient } from 'src/utils/clients';
 import { getAllTokenAddresses } from 'src/utils/getAllTokenAddresses';
 
 const PRICE_BIB01 = 107000000n;
-const PRICE_USD_BRL = 49000000n;
+const PRICE_USD_BRL = 4900000n;
 const BRZ = '0x35928a20EfA22EA35dCde06Ac201440aAd2fEC05'.toLocaleLowerCase();
 
 @Injectable()
@@ -27,7 +27,8 @@ export class TransferListener {
 
           const BIB01 =
             event.address === BRZ
-              ? event.args.value / PRICE_USD_BRL / PRICE_BIB01
+              ? (1000000n ** 2n * event.args.value) /
+                (PRICE_BIB01 * PRICE_USD_BRL)
               : (event.args.value * 1000000n) / PRICE_BIB01;
 
           await this.swapStableCoinsToInvestmentTokensService.execute({
