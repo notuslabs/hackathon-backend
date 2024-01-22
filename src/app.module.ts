@@ -9,6 +9,7 @@ import {
   FiatCurrency,
   FixedIncomeCurrency,
 } from './types/currency';
+import { CreateGenericUserOperationService } from './services/CreateGenericUserOperationService';
 import { CreateUserOperationTransferResolver } from './graphql/resolvers/CreateUserOperationTransferResolver';
 import { CreateUserOperationTransferService } from './services/CreateUserOperationTransferService';
 import { GetAccountAbstractionAddressByOwnerResolver } from './graphql/resolvers/GetAccountAbstractionAddressByOwnerResolver';
@@ -59,6 +60,7 @@ registerEnumType(AllCurrency, {
 
     TransferListener,
     SwapStableCoinsToInvestmentTokensService,
+    CreateGenericUserOperationService,
 
     GetBalanceResolver,
     GetBalanceService,
