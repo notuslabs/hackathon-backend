@@ -3,6 +3,7 @@ import { ChainlessPermissionedSwap } from 'src/abis/ChainlessPermissionedSwap';
 import { CHAINLESS_PERMISSIONED_SWAP_ADDRESS } from 'src/constants';
 import { SwapStableCoinsToInvestmentTokensService } from 'src/services/SwapStableCoinsToInvestmentTokensService';
 import { alchemyClient } from 'src/utils/clients';
+import { z } from 'zod';
 
 const PRICE_BIB01_USD = 107_700_000n; // 1e6
 const PRICE_USD_BRL = 4_900n; // 1e3
@@ -35,6 +36,17 @@ const RATES = {
   },
 };
 
+const eventArgsSchema = z.object({
+  tx_hash: z.literal(`0x${z.string()}`),
+  tx_nonce: z.bigint(),
+  receive_amount: z.bigint(),
+  receive_token: z.literal(`0x${z.string()}`),
+  recipient: z.literal(`0x${z.string()}`),
+  payer: z.literal(`0x${z.string()}`),
+  pay_with: z.literal(`0x${z.string()}`),
+  pay_amount: z.bigint(),
+});
+
 @Injectable()
 export class InvestmentListener {
   constructor(
@@ -48,31 +60,26 @@ export class InvestmentListener {
       abi: ChainlessPermissionedSwap,
       onLogs: async (events) => {
         for (const event of events) {
-          if (
-            !event.args.tx_hash ||
-            !event.args.tx_nonce ||
-            !event.args.receive_token ||
-            !event.args.recipient ||
-            !event.args.payer ||
-            !event.args.pay_with ||
-            !event.args.pay_amount
-          ) {
+          const eventArgsCheck = eventArgsSchema.safeParse(event.args);
+
+          if (!eventArgsCheck.success) {
             continue;
           }
 
-          const rates = RATES[event.args.pay_with][event.args.receive_token];
-          const receive_amount =
-            (event.args.pay_amount * rates.mul) / rates.div;
+          const eventArgs = eventArgsCheck.data;
+
+          const rates = RATES[eventArgs.pay_with][eventArgs.receive_token];
+          const receive_amount = (eventArgs.pay_amount * rates.mul) / rates.div;
 
           await this.swapStableCoinsToInvestmentTokensService.execute({
             receive_amount,
-            tx_hash: event.args.tx_hash,
-            tx_nonce: event.args.tx_nonce,
-            receive_token: event.args.receive_token,
-            recipient: event.args.recipient,
-            payer: event.args.payer,
-            pay_with: event.args.pay_with,
-            pay_amount: event.args.pay_amount,
+            tx_hash: eventArgs.tx_hash,
+            tx_nonce: eventArgs.tx_nonce,
+            receive_token: eventArgs.receive_token,
+            recipient: eventArgs.recipient,
+            payer: eventArgs.payer,
+            pay_with: eventArgs.pay_with,
+            pay_amount: eventArgs.pay_amount,
           });
         }
       },
