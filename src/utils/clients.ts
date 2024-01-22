@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import { bundlerActions } from 'permissionless';
 import { createPublicClient, createWalletClient, http } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';

@@ -1,9 +1,4 @@
-import 'dotenv/config';
-import {
-  Currency,
-  StableCurrency,
-  InvestCurrency,
-} from 'src/types/currency';
+import { Currency, StableCurrency, InvestCurrency } from 'src/types/currency';
 
 export function currencyToTokenAddress(currency: Currency): `0x${string}` {
   switch (currency) {
