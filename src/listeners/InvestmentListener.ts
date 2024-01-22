@@ -8,9 +8,9 @@ import { alchemyClient } from 'src/utils/clients';
 
 const PRICE_BIB01_USD = 107_700_000n; // 1e6
 const PRICE_USD_BRL = 4_900n; // 1e3
-const BRZ = '0x35928a20EfA22EA35dCde06Ac201440aAd2fEC05'.toLocaleLowerCase();
-const USDT = '0x35928a20EfA22EA35dCde06Ac201440aAd2fEC05'.toLocaleLowerCase();
-const BIB01 = '0x35928a20EfA22EA35dCde06Ac201440aAd2fEC05'.toLocaleLowerCase();
+const BRZ = '0x4ed141110f6eeeaba9a1df36d8c26f684d2475dc'
+const USDT = '0xc2132d05d31c914a87c6611c10748aeb04b58e8f'
+const BIB01 = '0xc2132d05d31c914a87c6611c10748aeb04b58e8f' // TODO: For now, Backed doesn't have the token on Polygon's mainnet. We'll use the same token address as USDT
 
 const RATES = {
   [BRZ]: {
