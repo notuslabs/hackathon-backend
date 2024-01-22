@@ -24,7 +24,7 @@ export class SwapStableCoinsToInvestmentTokensService {
       walletClient: investmentWalletClient,
     });
 
-    const ReceiveToken = getContract({
+    const receiveToken = getContract({
       abi: ERC20,
       address: fulfill_data.receive_token,
       publicClient: alchemyClient,
