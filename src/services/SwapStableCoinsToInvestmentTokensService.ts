@@ -6,18 +6,18 @@ import { alchemyClient, investmentWalletClient } from 'src/utils/clients';
 import { getContract } from 'viem';
 
 export type SwapStableCoinsToInvestmentTokensInput = {
-  tx_hash: Hexadecimal;
-  tx_nonce: bigint;
-  receive_amount: bigint;
-  receive_token: Hexadecimal;
+  txHash: Hexadecimal;
+  txNonce: bigint;
+  receiveAmount: bigint;
+  receiveToken: Hexadecimal;
   recipient: Hexadecimal;
   payer: Hexadecimal;
-  pay_with: Hexadecimal;
-  pay_amount: bigint;
+  payWith: Hexadecimal;
+  payAmount: bigint;
 };
 
 export class SwapStableCoinsToInvestmentTokensService {
-  async execute(fulfill_data: SwapStableCoinsToInvestmentTokensInput) {
+  async execute(fulfillData: SwapStableCoinsToInvestmentTokensInput) {
     const ChainlessSwap = getContract({
       abi: ChainlessPermissionedSwap,
       address: CHAINLESS_PERMISSIONED_SWAP_ADDRESS,
@@ -26,27 +26,27 @@ export class SwapStableCoinsToInvestmentTokensService {
 
     const receiveToken = getContract({
       abi: ERC20,
-      address: fulfill_data.receive_token,
+      address: fulfillData.receiveToken,
       publicClient: alchemyClient,
     });
 
     if (
       (await receiveToken.read.balanceOf([
         CHAINLESS_PERMISSIONED_SWAP_ADDRESS,
-      ])) < fulfill_data.receive_amount
+      ])) < fulfillData.receiveAmount
     ) {
       return;
     }
 
     await ChainlessSwap.write.fulfill_tx([
-      fulfill_data.tx_hash,
-      fulfill_data.tx_nonce,
-      fulfill_data.receive_amount,
-      fulfill_data.receive_token,
-      fulfill_data.recipient,
-      fulfill_data.payer,
-      fulfill_data.pay_with,
-      fulfill_data.pay_amount,
+      fulfillData.txHash,
+      fulfillData.txNonce,
+      fulfillData.receiveAmount,
+      fulfillData.receiveToken,
+      fulfillData.recipient,
+      fulfillData.payer,
+      fulfillData.payWith,
+      fulfillData.payAmount,
     ]);
   }
 }

@@ -69,17 +69,17 @@ export class InvestmentListener {
           const eventArgs = eventArgsCheck.data;
 
           const rates = RATES[eventArgs.pay_with][eventArgs.receive_token];
-          const receive_amount = (eventArgs.pay_amount * rates.mul) / rates.div;
+          const receiveAmount = (eventArgs.pay_amount * rates.mul) / rates.div;
 
           await this.swapStableCoinsToInvestmentTokensService.execute({
-            receive_amount,
-            tx_hash: eventArgs.tx_hash,
-            tx_nonce: eventArgs.tx_nonce,
-            receive_token: eventArgs.receive_token,
+            receiveAmount,
+            txHash: eventArgs.tx_hash,
+            txNonce: eventArgs.tx_nonce,
+            receiveToken: eventArgs.receive_token,
             recipient: eventArgs.recipient,
             payer: eventArgs.payer,
-            pay_with: eventArgs.pay_with,
-            pay_amount: eventArgs.pay_amount,
+            payWith: eventArgs.pay_with,
+            payAmount: eventArgs.pay_amount,
           });
         }
       },
