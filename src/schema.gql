@@ -56,6 +56,12 @@ type QuoteModel {
   expireAt: String!
 }
 
+type DepositModel {
+  pixAddress: String!
+  qrCode: String!
+  expiresAt: String!
+}
+
 input UserOperationInput {
   callData: Hexadecimal!
   sender: Hexadecimal!
@@ -87,7 +93,8 @@ type Mutation {
   createUserOperationInvest(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: Currency!, from: Hexadecimal!, asset: InvestmentAsset!): CreateUserOperationInvestOutput!
   createUserOperationWithdrawInvestment(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: Currency!, from: Hexadecimal!, asset: InvestmentAsset!): CreateUserOperationWithdrawInvestmentOutput!
   userOperationExecute(userOperation: UserOperationInput!): ExecuteUserOperationOutput!
-  requestQuote(from: String!, to: String!, amount: Float!): QuoteModel!
+  requestQuote(from: FiatCurrency!, to: String!, amount: Float!): QuoteModel!
+  depositFiat(quoteId: String!, recipientAddress: Hexadecimal!): DepositModel!
 }
 
 """The supported currencies"""
@@ -99,4 +106,9 @@ enum Currency {
 """The available investment options"""
 enum InvestmentAsset {
   BIB01
+}
+
+"""The supported fiat currencies"""
+enum FiatCurrency {
+  BRL
 }

@@ -12,6 +12,36 @@ export type RequestQuoteInput = {
   taxIdCountry?: string;
 };
 
+export type CreateSwapOrderInput = {
+  quoteId?: string;
+  quoteRequest?: {
+    side: 'Buy' | 'Sell';
+    quoteAmount: number;
+    baseCurrency: number;
+    baseAmount: string;
+    quoteCurrency: string;
+  };
+  taxId?: string;
+  name?: string;
+  email?: string;
+  taxIdCountry?: string;
+  cryptoWithdrawalInformation?: {
+    key: string;
+    blockchain: string;
+  };
+  externalId?: string;
+};
+
+export type CreateSwapOrderOutput = {
+  id: string;
+  currency: string;
+  blockchain: string;
+  referenceId: string;
+  depositAddress: string;
+  base64QRCode: string;
+  expireAt: string;
+};
+
 export type Quote = {
   quoteId: string;
   price: number;
@@ -62,6 +92,43 @@ export class TransferoClient {
       (expires_in - 120) * 1000, // 120 seconds before expiration
     );
     return access_token;
+  }
+
+  async createSwapOrder({
+    quoteId,
+    quoteRequest,
+    taxId,
+    taxIdCountry,
+    cryptoWithdrawalInformation,
+    email,
+    externalId,
+    name,
+  }: CreateSwapOrderInput): Promise<CreateSwapOrderOutput> {
+    const response = await fetch(`${this.baseURL}/api/ramp/v1/swaporder`, {
+      method: 'POST',
+      body: JSON.stringify({
+        quoteId,
+        quoteRequest,
+        taxId,
+        taxIdCountry,
+        cryptoWithdrawalInformation,
+        email,
+        externalId,
+        name,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${await this.#getAccessToken()}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new BadGatewayException(
+        'Error on creating swap order from Transfero',
+      );
+    }
+
+    return await response.json();
   }
 
   async requestQuote({

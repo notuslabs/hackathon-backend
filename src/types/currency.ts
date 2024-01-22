@@ -4,6 +4,10 @@ export enum AllCurrency {
   BIB01 = 'BIB01',
 }
 
+export enum FiatCurrency {
+  BRL = 'BRL',
+}
+
 export enum StableCurrency {
   BRZ = AllCurrency.BRZ,
   USDC = AllCurrency.USDC,

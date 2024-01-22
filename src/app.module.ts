@@ -4,7 +4,12 @@ import { GraphQLModule, registerEnumType } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GetBalanceResolver } from './graphql/resolvers/GetBalanceResolver';
 import { join } from 'path';
-import { AllCurrency, StableCurrency, InvestCurrency } from './types/currency';
+import {
+  AllCurrency,
+  StableCurrency,
+  InvestCurrency,
+  FiatCurrency,
+} from './types/currency';
 import { CreateGenericUserOperationService } from './services/CreateGenericUserOperationService';
 import { CreateUserOperationTransferResolver } from './graphql/resolvers/CreateUserOperationTransferResolver';
 import { CreateUserOperationTransferService } from './services/CreateUserOperationTransferService';
@@ -25,10 +30,17 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { RequestQuoteResolver } from './graphql/resolvers/RequestQuoteResolver';
 import { RequestQuoteService } from './services/RequestQuoteService';
 import { TransferoClient } from './TransferoClient';
+import { DepositFiatResolver } from './graphql/resolvers/DepositFiatResolver';
+import { DepositFiatService } from './services/DepositFiatService';
 
 registerEnumType(StableCurrency, {
   name: 'Currency',
   description: 'The supported currencies',
+});
+
+registerEnumType(FiatCurrency, {
+  name: 'FiatCurrency',
+  description: 'The supported fiat currencies',
 });
 
 registerEnumType(InvestCurrency, {
@@ -83,6 +95,9 @@ registerEnumType(AllCurrency, {
 
     RequestQuoteResolver,
     RequestQuoteService,
+
+    DepositFiatResolver,
+    DepositFiatService,
 
     {
       provide: APP_FILTER,

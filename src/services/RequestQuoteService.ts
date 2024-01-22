@@ -13,10 +13,10 @@ export class RequestQuoteService {
 
   async execute({ from, to, amount }: RequestQuoteInput): Promise<Quote> {
     const quote = await this.transferoClient.requestQuote({
-      baseCurrency: from,
-      quoteCurrency: to,
-      baseCurrencySize: amount,
-      quoteCurrencySize: 0,
+      quoteCurrency: from,
+      baseCurrency: to,
+      baseCurrencySize: 0,
+      quoteCurrencySize: amount,
       side: 'Buy',
     });
 
