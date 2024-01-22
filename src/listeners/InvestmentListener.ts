@@ -9,7 +9,7 @@ const PRICE_USD_BRL = 4900000n;
 const BRZ = '0x35928a20EfA22EA35dCde06Ac201440aAd2fEC05'.toLocaleLowerCase();
 
 @Injectable()
-export class TransferListener {
+export class InvestmentListener {
   constructor(
     private readonly swapStableCoinsToInvestmentTokensService: SwapStableCoinsToInvestmentTokensService,
   ) {

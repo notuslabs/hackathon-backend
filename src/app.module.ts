@@ -19,7 +19,7 @@ import { ExecuteUserOperationService } from './services/ExecuteUserOperationServ
 import { BigIntScalar } from './graphql/scalars/BigInt';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './HttpExceptionFilter';
-import { TransferListener } from './listeners/TransferListener';
+import { InvestmentListener } from './listeners/InvestmentListener';
 import { SwapStableCoinsToInvestmentTokensService } from './services/SwapStableCoinsToInvestmentTokensService';
 import { CacheModule } from '@nestjs/cache-manager';
 import { RequestQuoteResolver } from './graphql/resolvers/RequestQuoteResolver';
@@ -58,7 +58,8 @@ registerEnumType(AllCurrency, {
   providers: [
     TransferoClient,
 
-    TransferListener,
+    InvestmentListener,
+
     SwapStableCoinsToInvestmentTokensService,
     CreateGenericUserOperationService,
 
