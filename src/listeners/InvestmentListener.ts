@@ -1,12 +1,41 @@
 import { Injectable } from '@nestjs/common';
-import { ERC20 } from 'src/abis/ERC20';
-import { SwapStableCoinsToInvestmentTokensService } from 'src/services/SwapStableCoinsToInvestmentTokensService';
+import { ChainlessPermissionedSwap } from 'src/abis/ChainlessPermissionedSwap';
+import { CHAINLESS_PERMISSIONED_SWAP_ADDRESS } from 'src/constants';
+import {
+  SwapStableCoinsToInvestmentTokensService,
+} from 'src/services/SwapStableCoinsToInvestmentTokensService';
 import { alchemyClient } from 'src/utils/clients';
-import { getAllTokenAddresses } from 'src/utils/getAllTokenAddresses';
 
-const PRICE_BIB01 = 107000000n;
-const PRICE_USD_BRL = 4900000n;
+const PRICE_BIB01_USD = 107_700_000n; // 1e6
+const PRICE_USD_BRL = 4_900n; // 1e3
 const BRZ = '0x35928a20EfA22EA35dCde06Ac201440aAd2fEC05'.toLocaleLowerCase();
+const USDT = '0x35928a20EfA22EA35dCde06Ac201440aAd2fEC05'.toLocaleLowerCase();
+const BIB01 = '0x35928a20EfA22EA35dCde06Ac201440aAd2fEC05'.toLocaleLowerCase();
+
+const RATES = {
+  [BRZ]: {
+    [BIB01]: {
+      mul: 10n ** 9n,
+      div: PRICE_BIB01_USD * PRICE_USD_BRL,
+    },
+  },
+  [USDT]: {
+    [BIB01]: {
+      mul: 10n ** 18n,
+      div: PRICE_BIB01_USD,
+    },
+  },
+  [BIB01]: {
+    [USDT]: {
+      mul: PRICE_BIB01_USD,
+      div: 10n ** 6n,
+    },
+    [BRZ]: {
+      mul: PRICE_BIB01_USD * PRICE_USD_BRL,
+      div: 10n ** 9n,
+    },
+  },
+};
 
 @Injectable()
 export class InvestmentListener {
@@ -18,30 +47,39 @@ export class InvestmentListener {
 
   async start() {
     alchemyClient.watchContractEvent({
-      abi: ERC20,
+      abi: ChainlessPermissionedSwap,
       onLogs: async (events) => {
         for (const event of events) {
-          if (!event.args.from || !event.args.value) {
+          if (
+            !event.args.tx_hash ||
+            !event.args.tx_nonce ||
+            !event.args.receive_token ||
+            !event.args.recipient ||
+            !event.args.payer ||
+            !event.args.pay_with ||
+            !event.args.pay_amount
+          ) {
             continue;
           }
 
-          const BIB01 =
-            event.address === BRZ
-              ? (1000000n ** 2n * event.args.value) /
-                (PRICE_BIB01 * PRICE_USD_BRL)
-              : (event.args.value * 1000000n) / PRICE_BIB01;
+          const rates = RATES[event.args.pay_with][event.args.receive_token];
+          const receive_amount =
+            (event.args.pay_amount * rates.mul) / rates.div;
 
           await this.swapStableCoinsToInvestmentTokensService.execute({
-            amount: BIB01,
-            sendTo: event.args.from,
+            receive_amount,
+            tx_hash: event.args.tx_hash,
+            tx_nonce: event.args.tx_nonce,
+            receive_token: event.args.receive_token,
+            recipient: event.args.recipient,
+            payer: event.args.payer,
+            pay_with: event.args.pay_with,
+            pay_amount: event.args.pay_amount,
           });
         }
       },
-      address: getAllTokenAddresses(),
-      eventName: 'Transfer',
-      args: {
-        to: '0xcDB6d29a5f2f8d56aF07588f5BEa0E500b72548a',
-      },
+      address: CHAINLESS_PERMISSIONED_SWAP_ADDRESS,
+      eventName: 'SwapRequested',
     });
   }
 }
