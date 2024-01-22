@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { Currency } from 'src/types/currency';
 
 export function currencyToTokenAddress(currency: Currency): `0x${string}` {

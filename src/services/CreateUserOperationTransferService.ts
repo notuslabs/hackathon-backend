@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import { ERC20 } from 'src/abis/ERC20';
 import { Currency, currencyDecimals } from 'src/types/currency';
 import { Hexadecimal } from 'src/types/hexadecimal';
