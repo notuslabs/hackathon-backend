@@ -6,8 +6,8 @@ import { GetBalanceResolver } from './graphql/resolvers/GetBalanceResolver';
 import { join } from 'path';
 import {
   AllCurrency,
-  FiatCurrency,
-  FixedIncomeCurrency,
+  StableCurrency,
+  InvestCurrency,
 } from './types/currency';
 import { CreateGenericUserOperationService } from './services/CreateGenericUserOperationService';
 import { CreateUserOperationTransferResolver } from './graphql/resolvers/CreateUserOperationTransferResolver';
@@ -30,19 +30,19 @@ import { RequestQuoteResolver } from './graphql/resolvers/RequestQuoteResolver';
 import { RequestQuoteService } from './services/RequestQuoteService';
 import { TransferoClient } from './TransferoClient';
 
-registerEnumType(FiatCurrency, {
+registerEnumType(StableCurrency, {
   name: 'Currency',
   description: 'The supported currencies',
 });
 
-registerEnumType(FixedIncomeCurrency, {
-  name: 'FixedIncome',
-  description: 'The available fixed income options',
+registerEnumType(InvestCurrency, {
+  name: 'InvestmentAsset',
+  description: 'The available investment options',
 });
 
 registerEnumType(AllCurrency, {
   name: 'Asset',
-  description: 'All assets (Union of Currency & FixedIncome)',
+  description: 'All assets (Union of Currency & InvestmentAsset)',
 });
 
 @Module({

@@ -1,5 +1,5 @@
 import { ERC20 } from 'src/abis/ERC20';
-import { FiatCurrency, currencyDecimals } from 'src/types/currency';
+import { StableCurrency, currencyDecimals } from 'src/types/currency';
 import { Hexadecimal } from 'src/types/hexadecimal';
 import { encodeFunctionData, parseUnits } from 'viem';
 import { currencyToTokenAddress } from 'src/utils/currencyToTokenAddress';
@@ -9,7 +9,7 @@ import { CreateGenericUserOperationService } from './CreateGenericUserOperationS
 export type CreateUserOperationTransferInput = {
   to: Hexadecimal;
   from: Hexadecimal;
-  currency: FiatCurrency;
+  currency: StableCurrency;
   accountAbstractionAddress: Hexadecimal;
   amount: string;
 };

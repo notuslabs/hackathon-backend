@@ -9,7 +9,7 @@ import {
 import { UserOperationModel } from '../models/UserOperationModel';
 import { CreateUserOperationWithdrawService } from 'src/services/CreateUserOperationWithdrawService';
 import { Hexadecimal } from 'src/types/hexadecimal';
-import { FiatCurrency, FixedIncomeCurrency } from 'src/types/currency';
+import { StableCurrency, InvestCurrency } from 'src/types/currency';
 import { chain } from 'src/utils/clients';
 import { HexadecimalScalar } from '../scalars/Hexadecimal';
 
@@ -32,10 +32,10 @@ export class CreateUserOperationWithdrawResolver {
     @Args('accountAbstractionAddress', { type: () => HexadecimalScalar })
     accountAbstractionAddress: Hexadecimal,
     @Args('amount') amount: string,
-    @Args('currency', { type: () => FiatCurrency }) currency: FiatCurrency,
+    @Args('currency', { type: () => StableCurrency }) currency: StableCurrency,
     @Args('from', { type: () => HexadecimalScalar }) from: Hexadecimal,
-    @Args('asset', { type: () => FixedIncomeCurrency })
-    asset: FixedIncomeCurrency,
+    @Args('asset', { type: () => InvestCurrency })
+    asset: InvestCurrency,
   ): Promise<CreateUserOperationWithdrawOutput> {
     const { userOperation } =
       await this.createUserOperationWithdrawService.execute({

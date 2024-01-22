@@ -1,7 +1,7 @@
 import { ChainlessPermissionedSwap } from 'src/abis/ChainlessPermissionedSwap';
 import {
-  FiatCurrency,
-  FixedIncomeCurrency,
+  StableCurrency,
+  InvestCurrency,
   currencyDecimals,
 } from 'src/types/currency';
 import { Hexadecimal } from 'src/types/hexadecimal';
@@ -15,8 +15,8 @@ export type CreateUserOperationWithdrawInput = {
   from: Hexadecimal;
   accountAbstractionAddress: Hexadecimal;
   amount: string;
-  currency: FiatCurrency;
-  asset: FixedIncomeCurrency;
+  currency: StableCurrency;
+  asset: InvestCurrency;
 };
 
 @Injectable()

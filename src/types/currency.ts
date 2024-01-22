@@ -4,19 +4,19 @@ export enum AllCurrency {
   BIB01 = 'BIB01',
 }
 
-export enum FiatCurrency {
+export enum StableCurrency {
   BRZ = AllCurrency.BRZ,
   USDC = AllCurrency.USDC,
 }
 
-export enum FixedIncomeCurrency {
+export enum InvestCurrency {
   BIB01 = AllCurrency.BIB01,
 }
 
-export type Currency = FiatCurrency | FixedIncomeCurrency;
+export type Currency = StableCurrency | InvestCurrency;
 
 export const currencyDecimals: Record<Currency, number> = {
-  [FiatCurrency.USDC]: 6,
-  [FiatCurrency.BRZ]: 18,
-  [FixedIncomeCurrency.BIB01]: 18,
+  [StableCurrency.USDC]: 6,
+  [StableCurrency.BRZ]: 18,
+  [InvestCurrency.BIB01]: 18,
 };
