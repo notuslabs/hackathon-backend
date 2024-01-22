@@ -1,5 +1,5 @@
 import { ERC20 } from 'src/abis/ERC20';
-import { Currency, currencyDecimals } from 'src/types/currency';
+import { FiatCurrency, currencyDecimals } from 'src/types/currency';
 import { Hexadecimal } from 'src/types/hexadecimal';
 import { concatHex, encodeFunctionData, getContract, parseUnits } from 'viem';
 import { AlchemyLightAccountABI } from 'src/abis/AlchemyLightAccount';
@@ -14,7 +14,7 @@ import { alchemyClient } from 'src/utils/clients';
 export type CreateUserOperationTransferInput = {
   to: Hexadecimal;
   from: Hexadecimal;
-  currency: Currency;
+  currency: FiatCurrency;
   accountAbstractionAddress: Hexadecimal;
   amount: string;
 };

@@ -9,7 +9,7 @@ import {
 import { UserOperationModel } from '../models/UserOperationModel';
 import { CreateUserOperationTransferService } from 'src/services/CreateUserOperationTransferService';
 import { Hexadecimal } from 'src/types/hexadecimal';
-import { Currency } from 'src/types/currency';
+import { FiatCurrency } from 'src/types/currency';
 import { chain } from 'src/utils/clients';
 import { HexadecimalScalar } from '../scalars/Hexadecimal';
 
@@ -32,7 +32,7 @@ export class CreateUserOperationTransferResolver {
     @Args('accountAbstractionAddress', { type: () => HexadecimalScalar })
     accountAbstractionAddress: Hexadecimal,
     @Args('amount') amount: string,
-    @Args('currency', { type: () => Currency }) currency: Currency,
+    @Args('currency', { type: () => FiatCurrency }) currency: FiatCurrency,
     @Args('from', { type: () => HexadecimalScalar }) from: Hexadecimal,
     @Args('to', { type: () => HexadecimalScalar }) to: Hexadecimal,
   ): Promise<CreateUserOperationTransferOutput> {
