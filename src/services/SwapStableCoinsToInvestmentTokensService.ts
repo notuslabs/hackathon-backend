@@ -31,8 +31,9 @@ export class SwapStableCoinsToInvestmentTokensService {
     });
 
     if (
-      (await ReceiveToken.read.balanceOf([CHAINLESS_PERMISSIONED_SWAP_ADDRESS])) <
-      fulfill_data.receive_amount
+      (await receiveToken.read.balanceOf([
+        CHAINLESS_PERMISSIONED_SWAP_ADDRESS,
+      ])) < fulfill_data.receive_amount
     ) {
       return;
     }

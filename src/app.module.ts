@@ -4,18 +4,14 @@ import { GraphQLModule, registerEnumType } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GetBalanceResolver } from './graphql/resolvers/GetBalanceResolver';
 import { join } from 'path';
-import {
-  AllCurrency,
-  StableCurrency,
-  InvestCurrency,
-} from './types/currency';
+import { AllCurrency, StableCurrency, InvestCurrency } from './types/currency';
 import { CreateGenericUserOperationService } from './services/CreateGenericUserOperationService';
 import { CreateUserOperationTransferResolver } from './graphql/resolvers/CreateUserOperationTransferResolver';
 import { CreateUserOperationTransferService } from './services/CreateUserOperationTransferService';
 import { CreateUserOperationInvestResolver } from './graphql/resolvers/CreateUserOperationInvestResolver';
 import { CreateUserOperationInvestService } from './services/CreateUserOperationInvestService';
-import { CreateUserOperationWithdrawResolver } from './graphql/resolvers/CreateUserOperationWithdrawResolver';
-import { CreateUserOperationWithdrawService } from './services/CreateUserOperationWithdrawService';
+import { CreateUserOperationWithdrawInvestmentResolver } from './graphql/resolvers/CreateUserOperationWithdrawInvestmentResolver';
+import { CreateUserOperationWithdrawInvestmentService } from './services/CreateUserOperationWithdrawInvestmentService';
 import { GetAccountAbstractionAddressByOwnerResolver } from './graphql/resolvers/GetAccountAbstractionAddressByOwnerResolver';
 import { GetAccountAbstractionAddressByOwnerService } from './services/GetAccountAbstractionAddressByOwnerService';
 import { ExecuteUserOperationResolver } from './graphql/resolvers/ExecuteUserOperationResolver';
@@ -76,8 +72,8 @@ registerEnumType(AllCurrency, {
     CreateUserOperationInvestResolver,
     CreateUserOperationInvestService,
 
-    CreateUserOperationWithdrawResolver,
-    CreateUserOperationWithdrawService,
+    CreateUserOperationWithdrawInvestmentResolver,
+    CreateUserOperationWithdrawInvestmentService,
 
     GetAccountAbstractionAddressByOwnerResolver,
     GetAccountAbstractionAddressByOwnerService,

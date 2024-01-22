@@ -37,7 +37,7 @@ type CreateUserOperationInvestOutput {
   chainId: Int!
 }
 
-type CreateUserOperationWithdrawOutput {
+type CreateUserOperationWithdrawInvestmentOutput {
   userOperation: UserOperationModel!
   chainId: Int!
 }
@@ -75,7 +75,7 @@ type Query {
   accountAbstractionAddressByOwner(owner: Hexadecimal!): GetAccountAbstractionAddressByOwnerOutput!
 }
 
-"""All assets (Union of Currency & FixedIncome)"""
+"""All assets (Union of Currency & InvestmentAsset)"""
 enum Asset {
   USDC
   BRZ
@@ -84,8 +84,8 @@ enum Asset {
 
 type Mutation {
   createUserOperationTransfer(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: Currency!, from: Hexadecimal!, to: Hexadecimal!): CreateUserOperationTransferOutput!
-  createUserOperationInvest(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: Currency!, from: Hexadecimal!, asset: FixedIncome!): CreateUserOperationInvestOutput!
-  createUserOperationWithdraw(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: Currency!, from: Hexadecimal!, asset: FixedIncome!): CreateUserOperationWithdrawOutput!
+  createUserOperationInvest(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: Currency!, from: Hexadecimal!, asset: InvestmentAsset!): CreateUserOperationInvestOutput!
+  createUserOperationWithdrawInvestment(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: Currency!, from: Hexadecimal!, asset: InvestmentAsset!): CreateUserOperationWithdrawInvestmentOutput!
   userOperationExecute(userOperation: UserOperationInput!): ExecuteUserOperationOutput!
   requestQuote(from: String!, to: String!, amount: Float!): QuoteModel!
 }
@@ -96,7 +96,7 @@ enum Currency {
   USDC
 }
 
-"""The available fixed income options"""
-enum FixedIncome {
+"""The available investment options"""
+enum InvestmentAsset {
   BIB01
 }

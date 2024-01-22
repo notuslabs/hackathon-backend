@@ -7,14 +7,14 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { UserOperationModel } from '../models/UserOperationModel';
-import { CreateUserOperationWithdrawService } from 'src/services/CreateUserOperationWithdrawService';
+import { CreateUserOperationWithdrawInvestmentService } from 'src/services/CreateUserOperationWithdrawInvestmentService';
 import { Hexadecimal } from 'src/types/hexadecimal';
 import { StableCurrency, InvestCurrency } from 'src/types/currency';
 import { chain } from 'src/utils/clients';
 import { HexadecimalScalar } from '../scalars/Hexadecimal';
 
 @ObjectType()
-export class CreateUserOperationWithdrawOutput {
+export class CreateUserOperationWithdrawInvestmentOutput {
   @Field(() => UserOperationModel)
   userOperation: UserOperationModel;
   @Field(() => Int)
@@ -22,13 +22,13 @@ export class CreateUserOperationWithdrawOutput {
 }
 
 @Resolver()
-export class CreateUserOperationWithdrawResolver {
+export class CreateUserOperationWithdrawInvestmentResolver {
   constructor(
-    private createUserOperationWithdrawService: CreateUserOperationWithdrawService,
+    private createUserOperationWithdrawInvestmentService: CreateUserOperationWithdrawInvestmentService,
   ) {}
 
-  @Mutation(() => CreateUserOperationWithdrawOutput)
-  async createUserOperationWithdraw(
+  @Mutation(() => CreateUserOperationWithdrawInvestmentOutput)
+  async createUserOperationWithdrawInvestment(
     @Args('accountAbstractionAddress', { type: () => HexadecimalScalar })
     accountAbstractionAddress: Hexadecimal,
     @Args('amount') amount: string,
@@ -36,9 +36,9 @@ export class CreateUserOperationWithdrawResolver {
     @Args('from', { type: () => HexadecimalScalar }) from: Hexadecimal,
     @Args('asset', { type: () => InvestCurrency })
     asset: InvestCurrency,
-  ): Promise<CreateUserOperationWithdrawOutput> {
+  ): Promise<CreateUserOperationWithdrawInvestmentOutput> {
     const { userOperation } =
-      await this.createUserOperationWithdrawService.execute({
+      await this.createUserOperationWithdrawInvestmentService.execute({
         accountAbstractionAddress,
         amount,
         currency,

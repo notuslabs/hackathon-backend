@@ -11,7 +11,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateGenericUserOperationService } from './CreateGenericUserOperationService';
 import { CHAINLESS_PERMISSIONED_SWAP_ADDRESS } from 'src/constants';
 
-export type CreateUserOperationWithdrawInput = {
+export type CreateUserOperationWithdrawInvestmentInput = {
   from: Hexadecimal;
   accountAbstractionAddress: Hexadecimal;
   amount: string;
@@ -20,7 +20,7 @@ export type CreateUserOperationWithdrawInput = {
 };
 
 @Injectable()
-export class CreateUserOperationWithdrawService {
+export class CreateUserOperationWithdrawInvestmentService {
   constructor(
     private createGenericUserOperation: CreateGenericUserOperationService,
   ) {}
@@ -31,7 +31,7 @@ export class CreateUserOperationWithdrawService {
     currency,
     asset,
     accountAbstractionAddress,
-  }: CreateUserOperationWithdrawInput) {
+  }: CreateUserOperationWithdrawInvestmentInput) {
     const withdrawData = encodeFunctionData({
       abi: ChainlessPermissionedSwap,
       functionName: 'withdraw',
