@@ -12,6 +12,10 @@ import {
 import { CreateGenericUserOperationService } from './services/CreateGenericUserOperationService';
 import { CreateUserOperationTransferResolver } from './graphql/resolvers/CreateUserOperationTransferResolver';
 import { CreateUserOperationTransferService } from './services/CreateUserOperationTransferService';
+import { CreateUserOperationInvestResolver } from './graphql/resolvers/CreateUserOperationInvestResolver';
+import { CreateUserOperationInvestService } from './services/CreateUserOperationInvestService';
+import { CreateUserOperationWithdrawResolver } from './graphql/resolvers/CreateUserOperationWithdrawResolver';
+import { CreateUserOperationWithdrawService } from './services/CreateUserOperationWithdrawService';
 import { GetAccountAbstractionAddressByOwnerResolver } from './graphql/resolvers/GetAccountAbstractionAddressByOwnerResolver';
 import { GetAccountAbstractionAddressByOwnerService } from './services/GetAccountAbstractionAddressByOwnerService';
 import { ExecuteUserOperationResolver } from './graphql/resolvers/ExecuteUserOperationResolver';
@@ -68,6 +72,12 @@ registerEnumType(AllCurrency, {
 
     CreateUserOperationTransferResolver,
     CreateUserOperationTransferService,
+
+    CreateUserOperationInvestResolver,
+    CreateUserOperationInvestService,
+
+    CreateUserOperationWithdrawResolver,
+    CreateUserOperationWithdrawService,
 
     GetAccountAbstractionAddressByOwnerResolver,
     GetAccountAbstractionAddressByOwnerService,
