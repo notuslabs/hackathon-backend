@@ -11,6 +11,9 @@ export function currencyToTokenAddress(currency: Currency): `0x${string}` {
         ? '0x4eD141110F6EeeAbA9A1df36d8c26f684d2475Dc'
         : '0x35928a20EfA22EA35dCde06Ac201440aAd2fEC05';
     case InvestCurrency.BIB01:
-      return '0xA5c445c85089FF8AbF5C960842a4cF23669AE6D4';
+      return process.env.NODE_ENV === 'production'
+        // TODO: For now, Backed doesn't have the token on Polygon's mainnet. We'll use the same token address as USDC
+        ? '0x4eD141110F6EeeAbA9A1df36d8c26f684d2475Dc'
+        : '0xA5c445c85089FF8AbF5C960842a4cF23669AE6D4';
   }
 }
