@@ -9,9 +9,9 @@ import { z } from 'zod';
 
 const PRICE_BIB01_USD = 107_700_000n; // 1e6
 const PRICE_USD_BRL = 4_900n; // 1e3
-const BRZ = currencyToTokenAddress[StableCurrency.BRZ];
-const USDC = currencyToTokenAddress[StableCurrency.USDC];
-const BIB01 = currencyToTokenAddress[InvestCurrency.BIB01];
+const BRZ = currencyToTokenAddress(StableCurrency.BRZ);
+const USDC = currencyToTokenAddress(StableCurrency.USDC);
+const BIB01 = currencyToTokenAddress(InvestCurrency.BIB01);
 
 const RATES = {
   [BRZ]: {
