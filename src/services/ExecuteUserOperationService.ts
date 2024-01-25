@@ -4,17 +4,21 @@ import { UserOperation } from 'src/types/useroperation';
 import { alchemyClient } from 'src/utils/clients';
 
 export type ExecuteUserOperationInput = {
-  userOperation: UserOperation;
+  userOperations: UserOperation[];
 };
 
 @Injectable()
 export class ExecuteUserOperationService {
-  async execute({ userOperation }: ExecuteUserOperationInput) {
-    const userOpHash = await alchemyClient.sendUserOperation({
-      userOperation,
-      entryPoint: ENTRY_POINT_ADDRESS,
-    });
+  async execute({ userOperations }: ExecuteUserOperationInput) {
+    const userOpHashes = await Promise.all(
+      userOperations.map(userOperation =>
+        alchemyClient.sendUserOperation({
+          userOperation,
+          entryPoint: ENTRY_POINT_ADDRESS,
+        })
+      )
+    );
 
-    return userOpHash;
+    return userOpHashes;
   }
 }

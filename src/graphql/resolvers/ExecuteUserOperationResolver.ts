@@ -6,8 +6,8 @@ import { Hexadecimal } from 'src/types/hexadecimal';
 
 @ObjectType()
 export class ExecuteUserOperationOutput {
-  @Field(() => HexadecimalScalar)
-  operationHash: Hexadecimal;
+  @Field(() => [HexadecimalScalar])
+  operationHashes: Hexadecimal[];
 }
 
 @Resolver()
@@ -18,14 +18,14 @@ export class ExecuteUserOperationResolver {
 
   @Mutation(() => ExecuteUserOperationOutput)
   async userOperationExecute(
-    @Args('userOperation') userOperation: UserOperationModel,
+    @Args({name: 'userOperations', type: () => [UserOperationModel]}) userOperations: UserOperationModel[],
   ): Promise<ExecuteUserOperationOutput> {
-    const operationHash = await this.executeUserOperationService.execute({
-      userOperation,
+    const operationHashes = await this.executeUserOperationService.execute({
+      userOperations,
     });
 
     return {
-      operationHash,
+      operationHashes,
     };
   }
 }
