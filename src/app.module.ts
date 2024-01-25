@@ -11,7 +11,8 @@ import {
   FiatCurrency,
 } from './types/currency';
 import { CreateGenericUserOperationService } from './services/CreateGenericUserOperationService';
-import { CreateUserOperationApproveERC20Service } from './services/CreateUserOperationApproveERC20Service';
+import { CreateUserOperationERC20ApproveResolver } from './graphql/resolvers/CreateUserOperationERC20Approve';
+import { CreateUserOperationERC20ApproveService } from './services/CreateUserOperationERC20ApproveService';
 import { CreateUserOperationTransferResolver } from './graphql/resolvers/CreateUserOperationTransferResolver';
 import { CreateUserOperationTransferService } from './services/CreateUserOperationTransferService';
 import { CreateUserOperationInvestResolver } from './graphql/resolvers/CreateUserOperationInvestResolver';
@@ -78,7 +79,9 @@ registerEnumType(AllCurrency, {
 
     SwapStableCoinsToInvestmentTokensService,
     CreateGenericUserOperationService,
-    CreateUserOperationApproveERC20Service,
+
+    CreateUserOperationERC20ApproveResolver,
+    CreateUserOperationERC20ApproveService,
 
     GetBalanceResolver,
     GetBalanceService,

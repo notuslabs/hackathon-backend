@@ -8,14 +8,14 @@ import { CreateGenericUserOperationService } from 'src/services/CreateGenericUse
 import { CHAINLESS_PERMISSIONED_SWAP_ADDRESS } from 'src/constants';
 import { alchemyClient } from 'src/utils/clients';
 
-export type CreateUserOperationApproveERC20Input = {
+export type CreateUserOperationERC20ApproveInput = {
   from: Hexadecimal;
   currency: Currency;
   accountAbstractionAddress: Hexadecimal;
 };
 
 @Injectable()
-export class CreateUserOperationApproveERC20Service {
+export class CreateUserOperationERC20ApproveService {
   constructor(
     private createGenericUserOperation: CreateGenericUserOperationService,
   ) {}
@@ -24,7 +24,7 @@ export class CreateUserOperationApproveERC20Service {
     from,
     currency,
     accountAbstractionAddress,
-  }: CreateUserOperationApproveERC20Input) {
+  }: CreateUserOperationERC20ApproveInput) {
     const currencyContract = getContract({
       abi: ERC20,
       address: currencyToTokenAddress(currency),
@@ -41,7 +41,7 @@ export class CreateUserOperationApproveERC20Service {
       return;
     }
 
-    const appproveData = encodeFunctionData({
+    const approveData = encodeFunctionData({
       abi: ERC20,
       functionName: 'approve',
       args: [CHAINLESS_PERMISSIONED_SWAP_ADDRESS, max_uint256],
@@ -51,7 +51,7 @@ export class CreateUserOperationApproveERC20Service {
       from,
       accountAbstractionAddress,
       contractAddress: currencyToTokenAddress(currency),
-      encodedFunctionCall: appproveData,
+      encodedFunctionCall: approveData,
     });
   }
 }

@@ -27,18 +27,23 @@ type UserOperationModel {
 """Any string that starts with 0x"""
 scalar Hexadecimal
 
+type CreateUserOperationERC20ApproveOutput {
+  userOperation: UserOperationModel
+  chainId: Int!
+}
+
 type CreateUserOperationTransferOutput {
   userOperation: UserOperationModel!
   chainId: Int!
 }
 
 type CreateUserOperationInvestOutput {
-  userOperations: [UserOperationModel!]!
+  userOperation: UserOperationModel!
   chainId: Int!
 }
 
 type CreateUserOperationWithdrawInvestmentOutput {
-  userOperations: [UserOperationModel!]!
+  userOperation: UserOperationModel!
   chainId: Int!
 }
 
@@ -104,6 +109,7 @@ enum Asset {
 }
 
 type Mutation {
+  createUserOperationERC20Approve(accountAbstractionAddress: Hexadecimal!, from: Hexadecimal!, asset: Asset!): CreateUserOperationERC20ApproveOutput!
   createUserOperationTransfer(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, to: Hexadecimal!): CreateUserOperationTransferOutput!
   createUserOperationInvest(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, asset: InvestmentAsset!): CreateUserOperationInvestOutput!
   createUserOperationWithdrawInvestment(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, asset: InvestmentAsset!): CreateUserOperationWithdrawInvestmentOutput!
