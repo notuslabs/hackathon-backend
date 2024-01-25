@@ -29,14 +29,13 @@ import { InvestmentListener } from './listeners/InvestmentListener';
 import { SwapStableCoinsToInvestmentTokensService } from './services/SwapStableCoinsToInvestmentTokensService';
 import { CacheModule } from '@nestjs/cache-manager';
 import { RequestDepositQuoteResolver } from './graphql/resolvers/RequestDepositQuoteResolver';
-import { RequestDepositQuoteService } from './services/RequestDepositQuoteService';
 import { TransferoClient } from './TransferoClient';
 import { DepositFiatResolver } from './graphql/resolvers/DepositFiatResolver';
 import { DepositFiatService } from './services/DepositFiatService';
 import { WithdrawFiatResolver } from './graphql/resolvers/WithdrawFiatResolver';
 import { WithdrawFiatService } from './services/WithdrawFiatService';
 import { RequestWithdrawQuoteResolver } from './graphql/resolvers/RequestWithdrawQuoteResolver';
-import { RequestWithdrawQuoteService } from './services/RequestWithdrawQuoteService';
+import { RequestQuoteService } from './services/RequestQuoteService';
 
 registerEnumType(StableCurrency, {
   name: 'StableCurrency',
@@ -100,10 +99,8 @@ registerEnumType(AllCurrency, {
     ExecuteUserOperationService,
 
     RequestDepositQuoteResolver,
-    RequestDepositQuoteService,
-
     RequestWithdrawQuoteResolver,
-    RequestWithdrawQuoteService,
+    RequestQuoteService,
 
     DepositFiatResolver,
     DepositFiatService,

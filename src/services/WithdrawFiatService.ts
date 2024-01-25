@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { TransferoClient } from 'src/TransferoClient';
 import { StableCurrency, currencyDecimals } from 'src/types/currency';
+import { Hexadecimal } from 'src/types/hexadecimal';
 
 export type WithdrawFiatInput = {
   quoteId: string;
@@ -24,17 +25,16 @@ export class WithdrawFiatService {
         depositBlockchain: 'Polygon',
       });
 
-    const addressRegex = /ethereum:([^@]+)@.*?value=(\d+)/;
-    const blockchainDepositAddress = depositAddress
-      .match(addressRegex)
-      ?.at(1) as string;
+    const blockchainDepositAddress = new URLSearchParams(depositAddress).get(
+      'address',
+    );
 
     if (!currencyDecimals[currency]) {
       throw new BadRequestException('Invalid currency');
     }
 
     return {
-      blockchainDepositAddress,
+      blockchainDepositAddress: blockchainDepositAddress as Hexadecimal,
       expiresAt: expireAt,
       depositAmount,
       qrCode: base64QRCode,

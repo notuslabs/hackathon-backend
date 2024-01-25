@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Quote, TransferoClient } from 'src/TransferoClient';
+import { TransferoClient } from 'src/TransferoClient';
 
 export type RequestQuoteInput = {
   from: string;
@@ -7,11 +7,21 @@ export type RequestQuoteInput = {
   amount: number;
 };
 
+export type RequestQuoteOutput = {
+  expiresAt: string;
+  price: number;
+  quoteId: string;
+};
+
 @Injectable()
 export class RequestQuoteService {
   constructor(private transferoClient: TransferoClient) {}
 
-  async execute({ from, to, amount }: RequestQuoteInput): Promise<Quote> {
+  async execute({
+    from,
+    to,
+    amount,
+  }: RequestQuoteInput): Promise<RequestQuoteOutput> {
     const quote = await this.transferoClient.requestQuote({
       quoteCurrency: from,
       baseCurrency: to,
@@ -20,6 +30,10 @@ export class RequestQuoteService {
       side: 'Buy',
     });
 
-    return quote;
+    return {
+      expiresAt: quote.expireAt,
+      price: quote.price,
+      quoteId: quote.quoteId,
+    };
   }
 }
