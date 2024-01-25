@@ -1,23 +1,16 @@
-import {
-  ExceptionFilter,
-  Catch,
-  ArgumentsHost,
-  HttpException,
-} from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Catch, HttpException } from '@nestjs/common';
+import { GqlExceptionFilter } from '@nestjs/graphql';
+import { GraphQLError } from 'graphql';
 
 @Catch()
-export class HttpExceptionFilter implements ExceptionFilter {
-  catch(exception: HttpException, host: ArgumentsHost) {
-    const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
-    const status = exception.getStatus();
+export class HttpExceptionFilter implements GqlExceptionFilter {
+  catch(exception: HttpException) {
+    if (exception instanceof Error) {
+      const message = exception.message;
 
-    response.status(status).json({
-      statusCode: status,
-      timestamp: new Date().toISOString(),
-      path: request.url,
-    });
+      return new GraphQLError(message);
+    }
+
+    return new GraphQLError("Unknown error");
   }
 }
