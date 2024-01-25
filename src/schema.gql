@@ -66,12 +66,12 @@ type WithdrawModel {
   blockchainDepositAddress: Hexadecimal!
   expiresAt: String!
   qrCode: String!
-  depositCurrency: Currency!
+  depositCurrency: StableCurrency!
   depositAmount: Float!
 }
 
 """The supported currencies"""
-enum Currency {
+enum StableCurrency {
   BRZ
   USDC
   MATIC
@@ -104,12 +104,12 @@ enum Asset {
 }
 
 type Mutation {
-  createUserOperationTransfer(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: Currency!, from: Hexadecimal!, to: Hexadecimal!): CreateUserOperationTransferOutput!
-  createUserOperationInvest(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: Currency!, from: Hexadecimal!, asset: InvestmentAsset!): CreateUserOperationInvestOutput!
-  createUserOperationWithdrawInvestment(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: Currency!, from: Hexadecimal!, asset: InvestmentAsset!): CreateUserOperationWithdrawInvestmentOutput!
+  createUserOperationTransfer(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, to: Hexadecimal!): CreateUserOperationTransferOutput!
+  createUserOperationInvest(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, asset: InvestmentAsset!): CreateUserOperationInvestOutput!
+  createUserOperationWithdrawInvestment(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, asset: InvestmentAsset!): CreateUserOperationWithdrawInvestmentOutput!
   userOperationExecute(userOperations: [UserOperationInput!]!): ExecuteUserOperationOutput!
-  requestDepositQuote(from: FiatCurrency!, to: Currency!, amount: Float!): QuoteModel!
-  requestWithdrawQuote(from: Currency!, to: FiatCurrency!, amount: Float!): QuoteModel!
+  requestDepositQuote(from: FiatCurrency!, to: StableCurrency!, amount: Float!): QuoteModel!
+  requestWithdrawQuote(from: StableCurrency!, to: FiatCurrency!, amount: Float!): QuoteModel!
   depositFiat(quoteId: String!, recipientAddress: Hexadecimal!, taxId: String!): DepositModel!
   withdrawFiat(quoteId: String!, recipientPixAddress: String!, taxId: String!): WithdrawModel!
 }

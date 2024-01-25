@@ -39,7 +39,7 @@ import { RequestWithdrawQuoteResolver } from './graphql/resolvers/RequestWithdra
 import { RequestWithdrawQuoteService } from './services/RequestWithdrawQuoteService';
 
 registerEnumType(StableCurrency, {
-  name: 'Currency',
+  name: 'StableCurrency',
   description: 'The supported currencies',
 });
 
