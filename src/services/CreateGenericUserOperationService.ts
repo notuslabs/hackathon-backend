@@ -13,6 +13,7 @@ export type CreateGenericUserOperationInput = {
   accountAbstractionAddress: Hexadecimal;
   contractAddress: Hexadecimal;
   encodedFunctionCall: Hexadecimal;
+  customNonce?: bigint
 };
 
 @Injectable()
@@ -22,6 +23,7 @@ export class CreateGenericUserOperationService {
     accountAbstractionAddress,
     contractAddress,
     encodedFunctionCall,
+    customNonce,
   }: CreateGenericUserOperationInput) {
     const callData = encodeFunctionData({
       abi: AlchemyLightAccountABI,
@@ -56,7 +58,7 @@ export class CreateGenericUserOperationService {
       }),
       contract.read.getNonce([
         accountAbstractionAddress,
-        BigInt(Date.now()) << 64n,
+        customNonce ?? BigInt(Date.now()) << 64n,
       ]),
     ]);
 
