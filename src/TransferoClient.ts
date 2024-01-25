@@ -2,7 +2,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { BadGatewayException, Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 
-export type RequestQuoteInput = {
+export type RequestDepositQuoteInput = {
   baseCurrency: string;
   quoteCurrency: string;
   baseCurrencySize: number;
@@ -29,12 +29,17 @@ export type CreateSwapOrderInput = {
     key: string;
     blockchain: string;
   };
+  fiatWithdrawalInformation?: {
+    key: string;
+  };
   externalId?: string;
+  depositBlockchain?: string;
 };
 
 export type CreateSwapOrderOutput = {
   id: string;
   currency: string;
+  depositAmount: number;
   blockchain: string;
   referenceId: string;
   depositAddress: string;
@@ -102,7 +107,9 @@ export class TransferoClient {
     cryptoWithdrawalInformation,
     email,
     externalId,
+    fiatWithdrawalInformation,
     name,
+    depositBlockchain,
   }: CreateSwapOrderInput): Promise<CreateSwapOrderOutput> {
     const response = await fetch(`${this.baseURL}/api/ramp/v1/swaporder`, {
       method: 'POST',
@@ -113,8 +120,10 @@ export class TransferoClient {
         taxIdCountry,
         cryptoWithdrawalInformation,
         email,
+        fiatWithdrawalInformation,
         externalId,
         name,
+        depositBlockchain,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -125,6 +134,7 @@ export class TransferoClient {
     if (!response.ok) {
       throw new BadGatewayException(
         'Error on creating swap order from Transfero',
+        { cause: await response.json() },
       );
     }
 
@@ -139,7 +149,7 @@ export class TransferoClient {
     side,
     taxId,
     taxIdCountry,
-  }: RequestQuoteInput) {
+  }: RequestDepositQuoteInput) {
     const response = await fetch(`${this.baseURL}/api/quote/v2/requestquote`, {
       method: 'POST',
       body: JSON.stringify({
@@ -158,7 +168,10 @@ export class TransferoClient {
     });
 
     if (!response.ok) {
-      throw new BadGatewayException('Error on requesting quote from Transfero');
+      throw new BadGatewayException(
+        'Error on requesting quote from Transfero',
+        { cause: await response.json() },
+      );
     }
 
     return (await response.json())[0];

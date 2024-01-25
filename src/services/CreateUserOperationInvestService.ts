@@ -48,7 +48,7 @@ export class CreateUserOperationInvestService {
     const approveUserOP = await this.createUserOperationApprove.execute({
       from,
       accountAbstractionAddress,
-      currency
+      currency,
     });
 
     const investUserOp = await this.createGenericUserOperation.execute({

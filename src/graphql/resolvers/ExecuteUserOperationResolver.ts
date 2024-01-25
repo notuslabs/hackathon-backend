@@ -18,7 +18,8 @@ export class ExecuteUserOperationResolver {
 
   @Mutation(() => ExecuteUserOperationOutput)
   async userOperationExecute(
-    @Args({name: 'userOperations', type: () => [UserOperationModel]}) userOperations: UserOperationModel[],
+    @Args('userOperations', { type: () => [UserOperationModel] })
+    userOperations: UserOperationModel[],
   ): Promise<ExecuteUserOperationOutput> {
     const operationHashes = await this.executeUserOperationService.execute({
       userOperations,

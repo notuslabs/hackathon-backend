@@ -8,7 +8,7 @@ import { Hexadecimal } from 'src/types/hexadecimal';
 @ObjectType()
 export class GetBalanceOutput {
   @Field(() => BigIntScalar)
-  balance: BigInt;
+  balance: bigint;
   @Field(() => String)
   formattedBalance: string;
 }

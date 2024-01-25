@@ -13,7 +13,7 @@ export type CreateGenericUserOperationInput = {
   accountAbstractionAddress: Hexadecimal;
   contractAddress: Hexadecimal;
   encodedFunctionCall: Hexadecimal;
-  customNonce?: bigint
+  customNonce?: bigint;
 };
 
 @Injectable()

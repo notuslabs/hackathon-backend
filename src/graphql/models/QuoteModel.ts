@@ -7,5 +7,5 @@ export class QuoteModel {
   @Field(() => Number)
   price: number;
   @Field(() => String)
-  expireAt: string;
+  expiresAt: string;
 }

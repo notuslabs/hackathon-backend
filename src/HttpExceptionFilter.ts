@@ -8,9 +8,11 @@ export class HttpExceptionFilter implements GqlExceptionFilter {
     if (exception instanceof Error) {
       const message = exception.message;
 
-      return new GraphQLError(message);
+      return new GraphQLError(message, {
+        extensions: { cause: exception.cause },
+      });
     }
 
-    return new GraphQLError("Unknown error");
+    return new GraphQLError('Unknown error');
   }
 }

@@ -36,14 +36,15 @@ export class CreateUserOperationTransferResolver {
     @Args('from', { type: () => HexadecimalScalar }) from: Hexadecimal,
     @Args('to', { type: () => HexadecimalScalar }) to: Hexadecimal,
   ): Promise<CreateUserOperationTransferOutput> {
-    const userOperation =
-      await this.createUserOperationTransferService.execute({
+    const userOperation = await this.createUserOperationTransferService.execute(
+      {
         accountAbstractionAddress,
         amount,
         currency,
         from,
         to,
-      });
+      },
+    );
 
     return {
       userOperation,

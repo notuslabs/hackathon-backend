@@ -4,6 +4,7 @@ import { TransferoClient } from 'src/TransferoClient';
 export type DepositFiatInput = {
   quoteId: string;
   recipientAddress: string;
+  taxId: string;
 };
 
 export type DepositFiatOutput = {
@@ -19,10 +20,13 @@ export class DepositFiatService {
   async execute({
     quoteId,
     recipientAddress,
+    taxId,
   }: DepositFiatInput): Promise<DepositFiatOutput> {
     const { base64QRCode, depositAddress, expireAt } =
       await this.transferoClient.createSwapOrder({
         quoteId,
+        taxId,
+        taxIdCountry: 'BRA',
         cryptoWithdrawalInformation: {
           blockchain: 'Polygon',
           key: recipientAddress,

@@ -37,14 +37,13 @@ export class CreateUserOperationInvestResolver {
     @Args('asset', { type: () => InvestCurrency })
     asset: InvestCurrency,
   ): Promise<CreateUserOperationInvestOutput> {
-    const userOperations =
-      await this.createUserOperationInvestService.execute({
-        accountAbstractionAddress,
-        amount,
-        currency,
-        from,
-        asset,
-      });
+    const userOperations = await this.createUserOperationInvestService.execute({
+      accountAbstractionAddress,
+      amount,
+      currency,
+      from,
+      asset,
+    });
 
     return {
       userOperations,

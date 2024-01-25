@@ -13,10 +13,12 @@ export class DepositFiatResolver {
     @Args('quoteId') quoteId: string,
     @Args('recipientAddress', { type: () => HexadecimalScalar })
     recipientAddress: Hexadecimal,
+    @Args('taxId') taxId: string,
   ): Promise<DepositModel> {
     return await this.depositFiatService.execute({
       quoteId,
       recipientAddress,
+      taxId,
     });
   }
 }
