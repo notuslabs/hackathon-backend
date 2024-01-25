@@ -24,7 +24,7 @@ export class WithdrawFiatService {
         depositBlockchain: 'Polygon',
       });
 
-    const addressRegex = /ethereum:([^@]+)@.*?value=([^&]+)/;
+    const addressRegex = /ethereum:([^@]+)@.*?value=(\d+)/;
     const blockchainDepositAddress = depositAddress
       .match(addressRegex)
       ?.at(1) as string;
