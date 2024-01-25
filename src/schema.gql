@@ -33,12 +33,12 @@ type CreateUserOperationTransferOutput {
 }
 
 type CreateUserOperationInvestOutput {
-  userOperation: UserOperationModel!
+  userOperations: [UserOperationModel!]!
   chainId: Int!
 }
 
 type CreateUserOperationWithdrawInvestmentOutput {
-  userOperation: UserOperationModel!
+  userOperations: [UserOperationModel!]!
   chainId: Int!
 }
 
@@ -47,7 +47,7 @@ type GetAccountAbstractionAddressByOwnerOutput {
 }
 
 type ExecuteUserOperationOutput {
-  operationHash: Hexadecimal!
+  operationHashes: [Hexadecimal!]!
 }
 
 type QuoteModel {
@@ -92,7 +92,7 @@ type Mutation {
   createUserOperationTransfer(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: Currency!, from: Hexadecimal!, to: Hexadecimal!): CreateUserOperationTransferOutput!
   createUserOperationInvest(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: Currency!, from: Hexadecimal!, asset: InvestmentAsset!): CreateUserOperationInvestOutput!
   createUserOperationWithdrawInvestment(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: Currency!, from: Hexadecimal!, asset: InvestmentAsset!): CreateUserOperationWithdrawInvestmentOutput!
-  userOperationExecute(userOperation: UserOperationInput!): ExecuteUserOperationOutput!
+  userOperationExecute(userOperations: [UserOperationInput!]!): ExecuteUserOperationOutput!
   requestQuote(from: FiatCurrency!, to: String!, amount: Float!): QuoteModel!
   depositFiat(quoteId: String!, recipientAddress: Hexadecimal!): DepositModel!
 }

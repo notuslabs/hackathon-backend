@@ -8,7 +8,8 @@ import { Hexadecimal } from 'src/types/hexadecimal';
 import { encodeFunctionData, parseUnits } from 'viem';
 import { currencyToTokenAddress } from 'src/utils/currencyToTokenAddress';
 import { Injectable } from '@nestjs/common';
-import { CreateGenericUserOperationService } from './CreateGenericUserOperationService';
+import { CreateGenericUserOperationService } from 'src/services/CreateGenericUserOperationService';
+import { CreateUserOperationApproveERC20Service } from 'src/services/CreateUserOperationApproveERC20Service';
 import { CHAINLESS_PERMISSIONED_SWAP_ADDRESS } from 'src/constants';
 
 export type CreateUserOperationInvestInput = {
@@ -23,6 +24,7 @@ export type CreateUserOperationInvestInput = {
 export class CreateUserOperationInvestService {
   constructor(
     private createGenericUserOperation: CreateGenericUserOperationService,
+    private createUserOperationApprove: CreateUserOperationApproveERC20Service,
   ) {}
 
   async execute({
@@ -43,11 +45,21 @@ export class CreateUserOperationInvestService {
       ],
     });
 
-    return this.createGenericUserOperation.execute({
+    const approveUserOP = await this.createUserOperationApprove.execute({
+      from,
+      accountAbstractionAddress,
+      currency
+    });
+
+    const investUserOp = await this.createGenericUserOperation.execute({
       from,
       accountAbstractionAddress,
       contractAddress: CHAINLESS_PERMISSIONED_SWAP_ADDRESS,
       encodedFunctionCall: investData,
+      // guarantees that this will execute after the approval
+      customNonce: approveUserOP ? approveUserOP.nonce + 1n : undefined,
     });
+
+    return approveUserOP ? [approveUserOP, investUserOp] : [investUserOp];
   }
 }

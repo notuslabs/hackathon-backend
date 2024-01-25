@@ -4,7 +4,7 @@ import { Hexadecimal } from 'src/types/hexadecimal';
 import { encodeFunctionData, parseUnits } from 'viem';
 import { currencyToTokenAddress } from 'src/utils/currencyToTokenAddress';
 import { Injectable } from '@nestjs/common';
-import { CreateGenericUserOperationService } from './CreateGenericUserOperationService';
+import { CreateGenericUserOperationService } from 'src/services/CreateGenericUserOperationService';
 
 export type CreateUserOperationTransferInput = {
   to: Hexadecimal;

@@ -106,8 +106,6 @@ export class CreateGenericUserOperationService {
     userOperation.preVerificationGas = preVerificationGas;
     userOperation.verificationGasLimit = verificationGasLimit;
 
-    return {
-      userOperation: userOperation,
-    };
+    return userOperation;
   }
 }

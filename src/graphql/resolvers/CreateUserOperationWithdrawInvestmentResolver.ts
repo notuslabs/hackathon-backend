@@ -15,8 +15,8 @@ import { HexadecimalScalar } from '../scalars/Hexadecimal';
 
 @ObjectType()
 export class CreateUserOperationWithdrawInvestmentOutput {
-  @Field(() => UserOperationModel)
-  userOperation: UserOperationModel;
+  @Field(() => [UserOperationModel])
+  userOperations: UserOperationModel[];
   @Field(() => Int)
   chainId: number;
 }
@@ -37,7 +37,7 @@ export class CreateUserOperationWithdrawInvestmentResolver {
     @Args('asset', { type: () => InvestCurrency })
     asset: InvestCurrency,
   ): Promise<CreateUserOperationWithdrawInvestmentOutput> {
-    const { userOperation } =
+    const userOperations =
       await this.createUserOperationWithdrawInvestmentService.execute({
         accountAbstractionAddress,
         amount,
@@ -47,7 +47,7 @@ export class CreateUserOperationWithdrawInvestmentResolver {
       });
 
     return {
-      userOperation,
+      userOperations,
       chainId: chain.id,
     };
   }
