@@ -33,7 +33,7 @@ export class CreateUserOperationERC20ApproveService {
 
     const max_uint256 = 2n ** 256n - 1n;
     const allowance = await currencyContract.read.allowance([
-      from,
+      accountAbstractionAddress,
       CHAINLESS_PERMISSIONED_SWAP_ADDRESS,
     ]);
 
