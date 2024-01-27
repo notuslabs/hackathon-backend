@@ -38,14 +38,15 @@ const RATES = {
   },
 };
 
+const zHex = z.string().regex(/^0x[a-fA-F0-9]{40}$/);
+
 const eventArgsSchema = z.object({
-  tx_hash: z.literal(`0x${z.string()}`),
+  tx_hash: z.string().regex(/^0x[a-fA-F0-9]{64}$/),
   tx_nonce: z.bigint(),
-  receive_amount: z.bigint(),
-  receive_token: z.literal(`0x${z.string()}`),
-  recipient: z.literal(`0x${z.string()}`),
-  payer: z.literal(`0x${z.string()}`),
-  pay_with: z.literal(`0x${z.string()}`),
+  receive_token: zHex,
+  recipient: zHex,
+  payer: zHex,
+  pay_with: zHex,
   pay_amount: z.bigint(),
 });
 
@@ -65,6 +66,7 @@ export class InvestmentListener {
           const eventArgsCheck = eventArgsSchema.safeParse(event.args);
 
           if (!eventArgsCheck.success) {
+            console.error('Event with bad data', eventArgsCheck.error);
             continue;
           }
 
@@ -75,12 +77,12 @@ export class InvestmentListener {
 
           await this.swapStableCoinsToInvestmentTokensService.execute({
             receiveAmount,
-            txHash: eventArgs.tx_hash,
+            txHash: eventArgs.tx_hash as `0x${string}`,
             txNonce: eventArgs.tx_nonce,
-            receiveToken: eventArgs.receive_token,
-            recipient: eventArgs.recipient,
-            payer: eventArgs.payer,
-            payWith: eventArgs.pay_with,
+            receiveToken: eventArgs.receive_token as `0x${string}`,
+            recipient: eventArgs.recipient as `0x${string}`,
+            payer: eventArgs.payer as `0x${string}`,
+            payWith: eventArgs.pay_with as `0x${string}`,
             payAmount: eventArgs.pay_amount,
           });
         }
