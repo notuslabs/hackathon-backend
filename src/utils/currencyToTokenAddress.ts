@@ -15,7 +15,5 @@ export function currencyToTokenAddress(currency: Currency): `0x${string}` {
         ? // TODO: For now, Backed doesn't have the token on Polygon's mainnet. We'll use the same token address as DAI
           '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063'
         : '0xA5c445c85089FF8AbF5C960842a4cF23669AE6D4';
-    case StableCurrency.MATIC:
-      return '0x0000000000000000000000000000000000001010';
   }
 }

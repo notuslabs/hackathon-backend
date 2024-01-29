@@ -79,7 +79,6 @@ type WithdrawModel {
 enum StableCurrency {
   BRZ
   USDC
-  MATIC
 }
 
 input UserOperationInput {
