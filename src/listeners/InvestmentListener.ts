@@ -55,6 +55,8 @@ const eventArgsSchema = z.object({
 
 @Injectable()
 export class InvestmentListener {
+  private readonly logger = new Logger(InvestmentListener.name);
+
   constructor(
     private readonly swapStableCoinsToInvestmentTokensService: SwapStableCoinsToInvestmentTokensService,
   ) {
@@ -69,7 +71,7 @@ export class InvestmentListener {
           const eventArgsCheck = eventArgsSchema.safeParse(event.args);
 
           if (!eventArgsCheck.success) {
-            console.error('Event with bad data', eventArgsCheck.error);
+            this.logger.error('Event with bad data', eventArgsCheck.error);
             continue;
           }
 
