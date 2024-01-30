@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { TransferoClient } from 'src/TransferoClient';
 
 export type RequestQuoteInput = {
-  from: string;
-  to: string;
+  crypto: string;
+  fiat: string;
   amount: number;
+  side: 'Buy' | 'Sell';
 };
 
 export type RequestQuoteOutput = {
@@ -18,16 +19,16 @@ export class RequestQuoteService {
   constructor(private transferoClient: TransferoClient) {}
 
   async execute({
-    from,
-    to,
+    crypto,
+    fiat,
     amount,
+    side,
   }: RequestQuoteInput): Promise<RequestQuoteOutput> {
     const quote = await this.transferoClient.requestQuote({
-      quoteCurrency: from,
-      baseCurrency: to,
-      baseCurrencySize: 0,
-      quoteCurrencySize: amount,
-      side: 'Buy',
+      cryptoCurrency: crypto,
+      fiatCurrency: fiat,
+      amount,
+      side,
     });
 
     return {

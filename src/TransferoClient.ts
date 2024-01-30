@@ -3,10 +3,9 @@ import { BadGatewayException, Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 
 export type RequestDepositQuoteInput = {
-  baseCurrency: string;
-  quoteCurrency: string;
-  baseCurrencySize: number;
-  quoteCurrencySize: number;
+  fiatCurrency: string;
+  cryptoCurrency: string;
+  amount: number;
   side: 'Buy' | 'Sell';
   taxId?: string;
   taxIdCountry?: string;
@@ -142,10 +141,9 @@ export class TransferoClient {
   }
 
   async requestQuote({
-    baseCurrency,
-    baseCurrencySize,
-    quoteCurrency,
-    quoteCurrencySize,
+    fiatCurrency,
+    cryptoCurrency,
+    amount,
     side,
     taxId,
     taxIdCountry,
@@ -153,10 +151,10 @@ export class TransferoClient {
     const response = await fetch(`${this.baseURL}/api/quote/v2/requestquote`, {
       method: 'POST',
       body: JSON.stringify({
-        baseCurrency,
-        baseCurrencySize,
-        quoteCurrency,
-        quoteCurrencySize,
+        baseCurrency: cryptoCurrency,
+        baseCurrencySize: 0,
+        quoteCurrency: fiatCurrency,
+        quoteCurrencySize: amount,
         side,
         taxId,
         taxIdCountry,

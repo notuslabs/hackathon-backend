@@ -14,9 +14,10 @@ export class RequestQuoteResolver {
     @Args('amount') amount: number,
   ): Promise<QuoteModel> {
     const quote = await this.requestQuoteService.execute({
-      from,
-      to,
+      fiat: from,
+      crypto: to,
       amount,
+      side: 'Buy',
     });
 
     return quote;
