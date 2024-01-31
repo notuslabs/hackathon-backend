@@ -1,3 +1,5 @@
+import { Exception } from "src/shared/Exception";
+
 /**
  * Returns the max bigint in a list of bigints
  *
@@ -6,7 +8,7 @@
  */
 export const bigIntMax = (...args: bigint[]) => {
   if (!args.length) {
-    throw new Error('bigIntMax requires at least one argument');
+    throw new Exception('bigIntMax requires at least one argument', 'invalid_bigint_max');
   }
 
   return args.reduce((m, c) => (m > c ? m : c));
