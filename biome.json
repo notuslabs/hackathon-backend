@@ -14,6 +14,9 @@
 			"recommended": true,
 			"style": {
 				"useLiteralEnumMembers": "off"
+			},
+			"nursery": {
+				"noUnusedImports": "error"
 			}
 		}
 	}
