@@ -16,7 +16,7 @@ Sentry.init({
 
 		return event;
 	},
-	maxValueLength: 1000,
+	maxValueLength: 10000,
 	enabled: process.env.SENTRY_DSN !== undefined,
 });
 
