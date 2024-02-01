@@ -1,13 +1,25 @@
 import { Hexadecimal } from "src/types/hexadecimal";
-import { concatHex, encodeFunctionData, getContract } from "viem";
+import {
+	concatHex,
+	encodeAbiParameters,
+	encodeFunctionData,
+	getContract,
+	keccak256,
+} from "viem";
 import { AlchemyLightAccountABI } from "src/abis/AlchemyLightAccount";
-import { ENTRY_POINT_ADDRESS, FACTORY_ADDRESS } from "src/constants";
+import {
+	CHAINLESS_PAYMASTER_ADDRESS,
+	ENTRY_POINT_ADDRESS,
+	FACTORY_ADDRESS,
+} from "src/constants";
 import { SimpleAccountFactoryAbi } from "src/abis/SimpleAccountFactory";
 import { Injectable } from "@nestjs/common";
 import { ERC4337 } from "src/abis/ERC4337";
 import { UserOperation } from "src/types/useroperation";
-import { alchemyClient } from "src/utils/clients";
+import { alchemyClient, investmentWalletClient } from "src/utils/clients";
 import { UnexpectedException } from "src/shared/UnexpectedException";
+import { StableCurrency, currencyDecimals } from "src/types/currency";
+import { currencyToTokenAddress } from "src/utils/currencyToTokenAddress";
 
 export type CreateGenericUserOperationInput = {
 	from: Hexadecimal;
@@ -92,7 +104,7 @@ export class CreateGenericUserOperationService {
 			sender: accountAbstractionAddress,
 			signature: "0x" as Hexadecimal,
 			initCode,
-			paymasterAndData: "0x" as Hexadecimal,
+			paymasterAndData: await this.getPaymasterAndData(),
 			maxFeePerGas: baseFeePlusFiftyPercent + prioFeePlusFivePercent,
 			maxPriorityFeePerGas: prioFeePlusFivePercent,
 			nonce,
@@ -111,5 +123,44 @@ export class CreateGenericUserOperationService {
 		userOperation.verificationGasLimit = verificationGasLimit;
 
 		return userOperation;
+	}
+
+	async getPaymasterAndData() {
+		const priceRequest = await fetch(
+			'https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=brl&precision=18',
+		);
+		const priceJSON = await priceRequest.json();
+		const priceWithDot: string = priceJSON['matic-network'].brl.toString();
+
+		const values = priceWithDot.split('.');
+		const decimal = values[0] ?? '';
+		const priceUint256 = BigInt(
+			`${values[0]}${decimal}${'0'.repeat(
+				currencyDecimals[StableCurrency.BRZ] - decimal.length,
+			)}`,
+		);
+
+		const payingToken = currencyToTokenAddress(StableCurrency.BRZ);
+		const validAfter = Date.now();
+		const validUntil = Date.now() + 5 * 60 * 1000;
+		const paymasterData = encodeAbiParameters(
+			[
+				{ name: 'payingToken', type: 'address' },
+				{ name: 'exchangeRate', type: 'uint256' },
+				{ name: 'validAfter', type: 'uint48' },
+				{ name: 'validUntil', type: 'uint48' },
+			],
+			[payingToken, priceUint256, validAfter, validUntil],
+		);
+		const signature = await investmentWalletClient.signMessage({
+			message: { raw: keccak256(paymasterData) },
+		});
+
+		const paymasterAndData = concatHex([
+			CHAINLESS_PAYMASTER_ADDRESS,
+			paymasterData,
+			signature,
+		]);
+		return paymasterAndData;
 	}
 }
