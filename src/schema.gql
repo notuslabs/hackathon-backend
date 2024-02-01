@@ -125,7 +125,7 @@ enum Asset {
 }
 
 type Mutation {
-  createUserOperationERC20Approve(accountAbstractionAddress: Hexadecimal!, from: Hexadecimal!, asset: Asset!): CreateUserOperationERC20ApproveOutput!
+  createUserOperationERC20Approve(accountAbstractionAddress: Hexadecimal!, from: Hexadecimal!, asset: Asset!, spender: Hexadecimal!): CreateUserOperationERC20ApproveOutput!
   createUserOperationTransfer(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, to: Hexadecimal!): CreateUserOperationTransferOutput!
   createUserOperationInvest(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, asset: InvestmentAsset!): CreateUserOperationInvestOutput!
   createUserOperationWithdrawInvestment(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, asset: InvestmentAsset!): CreateUserOperationWithdrawInvestmentOutput!

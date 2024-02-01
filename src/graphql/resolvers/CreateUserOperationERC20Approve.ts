@@ -33,12 +33,14 @@ export class CreateUserOperationERC20ApproveResolver {
     accountAbstractionAddress: Hexadecimal,
     @Args('from', { type: () => HexadecimalScalar }) from: Hexadecimal,
     @Args('asset', { type: () => AllCurrency }) currency: Currency,
+    @Args('spender', { type: () => HexadecimalScalar }) spender: Hexadecimal,
   ): Promise<CreateUserOperationERC20ApproveOutput> {
     const userOperation =
       await this.createUserOperationERC20ApproveService.execute({
         accountAbstractionAddress,
         currency,
         from,
+        spender,
       });
 
     return {

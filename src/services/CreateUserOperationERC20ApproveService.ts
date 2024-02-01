@@ -5,13 +5,13 @@ import { encodeFunctionData, getContract } from 'viem';
 import { currencyToTokenAddress } from 'src/utils/currencyToTokenAddress';
 import { Injectable } from '@nestjs/common';
 import { CreateGenericUserOperationService } from 'src/services/CreateGenericUserOperationService';
-import { CHAINLESS_PERMISSIONED_SWAP_ADDRESS } from 'src/constants';
 import { alchemyClient } from 'src/utils/clients';
 
 export type CreateUserOperationERC20ApproveInput = {
   from: Hexadecimal;
   currency: Currency;
   accountAbstractionAddress: Hexadecimal;
+  spender: Hexadecimal;
 };
 
 @Injectable()
@@ -24,6 +24,7 @@ export class CreateUserOperationERC20ApproveService {
     from,
     currency,
     accountAbstractionAddress,
+    spender,
   }: CreateUserOperationERC20ApproveInput) {
     const currencyContract = getContract({
       abi: ERC20,
@@ -34,7 +35,7 @@ export class CreateUserOperationERC20ApproveService {
     const max_uint256 = 2n ** 256n - 1n;
     const allowance = await currencyContract.read.allowance([
       accountAbstractionAddress,
-      CHAINLESS_PERMISSIONED_SWAP_ADDRESS,
+      spender,
     ]);
 
     if (allowance == max_uint256) {
@@ -44,7 +45,7 @@ export class CreateUserOperationERC20ApproveService {
     const approveData = encodeFunctionData({
       abi: ERC20,
       functionName: 'approve',
-      args: [CHAINLESS_PERMISSIONED_SWAP_ADDRESS, max_uint256],
+      args: [spender, max_uint256],
     });
 
     return this.createGenericUserOperation.execute({
