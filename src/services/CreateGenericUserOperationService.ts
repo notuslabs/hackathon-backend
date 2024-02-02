@@ -128,7 +128,12 @@ export class CreateGenericUserOperationService {
 
 	async getPaymasterAndData() {
 		const priceRequest = await fetch(
-			"https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=brl&precision=18",
+			`https://${process.env.COINGECKO_API_KEY ? "pro-" : ""}api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=brl&precision=18`,
+			(process.env.COINGECKO_API_KEY ? {
+				headers: {
+					"x-cg-pro-api-key": process.env.COINGECKO_API_KEY
+				}
+			} : {})
 		);
 		const priceJSON = await priceRequest.json();
 		const priceUint256 = parseUnits(
