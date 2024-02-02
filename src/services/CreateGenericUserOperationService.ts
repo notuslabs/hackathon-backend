@@ -5,6 +5,7 @@ import {
 	encodeFunctionData,
 	getContract,
 	keccak256,
+	parseUnits,
 } from "viem";
 import { AlchemyLightAccountABI } from "src/abis/AlchemyLightAccount";
 import {
@@ -130,16 +131,10 @@ export class CreateGenericUserOperationService {
 			'https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=brl&precision=18',
 		);
 		const priceJSON = await priceRequest.json();
-		const priceWithDot: string = priceJSON['matic-network'].brl.toString();
-
-		const values = priceWithDot.split('.');
-		const decimal = values[0] ?? '';
-		const priceUint256 = BigInt(
-			`${values[0]}${decimal}${'0'.repeat(
-				currencyDecimals[StableCurrency.BRZ] - decimal.length,
-			)}`,
+		const priceUint256 = parseUnits(
+			priceJSON['matic-network'].brl.toString(),
+			currencyDecimals[StableCurrency.BRZ],
 		);
-
 		const payingToken = currencyToTokenAddress(StableCurrency.BRZ);
 		const validAfter = Date.now();
 		const validUntil = Date.now() + 5 * 60 * 1000;
