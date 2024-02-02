@@ -128,11 +128,11 @@ export class CreateGenericUserOperationService {
 
 	async getPaymasterAndData() {
 		const priceRequest = await fetch(
-			'https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=brl&precision=18',
+			"https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=brl&precision=18",
 		);
 		const priceJSON = await priceRequest.json();
 		const priceUint256 = parseUnits(
-			priceJSON['matic-network'].brl.toString(),
+			priceJSON["matic-network"].brl.toString(),
 			currencyDecimals[StableCurrency.BRZ],
 		);
 		const payingToken = currencyToTokenAddress(StableCurrency.BRZ);
@@ -140,10 +140,10 @@ export class CreateGenericUserOperationService {
 		const validUntil = Date.now() + 5 * 60 * 1000;
 		const paymasterData = encodeAbiParameters(
 			[
-				{ name: 'payingToken', type: 'address' },
-				{ name: 'exchangeRate', type: 'uint256' },
-				{ name: 'validAfter', type: 'uint48' },
-				{ name: 'validUntil', type: 'uint48' },
+				{ name: "payingToken", type: "address" },
+				{ name: "exchangeRate", type: "uint256" },
+				{ name: "validAfter", type: "uint48" },
+				{ name: "validUntil", type: "uint48" },
 			],
 			[payingToken, priceUint256, validAfter, validUntil],
 		);

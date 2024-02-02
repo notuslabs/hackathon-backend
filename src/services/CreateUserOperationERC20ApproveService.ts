@@ -1,11 +1,11 @@
-import { ERC20 } from 'src/abis/ERC20';
-import { Currency } from 'src/types/currency';
-import { Hexadecimal } from 'src/types/hexadecimal';
-import { encodeFunctionData, getContract } from 'viem';
-import { currencyToTokenAddress } from 'src/utils/currencyToTokenAddress';
-import { Injectable } from '@nestjs/common';
-import { CreateGenericUserOperationService } from 'src/services/CreateGenericUserOperationService';
-import { alchemyClient } from 'src/utils/clients';
+import { ERC20 } from "src/abis/ERC20";
+import { Currency } from "src/types/currency";
+import { Hexadecimal } from "src/types/hexadecimal";
+import { encodeFunctionData, getContract } from "viem";
+import { currencyToTokenAddress } from "src/utils/currencyToTokenAddress";
+import { Injectable } from "@nestjs/common";
+import { CreateGenericUserOperationService } from "src/services/CreateGenericUserOperationService";
+import { alchemyClient } from "src/utils/clients";
 
 export type CreateUserOperationERC20ApproveInput = {
   from: Hexadecimal;
@@ -38,13 +38,13 @@ export class CreateUserOperationERC20ApproveService {
       spender,
     ]);
 
-    if (allowance == max_uint256) {
+    if (allowance === max_uint256) {
       return;
     }
 
     const approveData = encodeFunctionData({
       abi: ERC20,
-      functionName: 'approve',
+      functionName: "approve",
       args: [spender, max_uint256],
     });
 
