@@ -1,5 +1,5 @@
 import { ERC20 } from "src/abis/ERC20";
-import { Currency } from "src/types/currency";
+import { AllCurrency } from "src/types/currency";
 import { Hexadecimal } from "src/types/hexadecimal";
 import { encodeFunctionData, getContract } from "viem";
 import { currencyToTokenAddress } from "src/utils/currencyToTokenAddress";
@@ -9,7 +9,7 @@ import { alchemyClient } from "src/utils/clients";
 
 export type CreateUserOperationERC20ApproveInput = {
   from: Hexadecimal;
-  currency: Currency;
+  currency: AllCurrency;
   accountAbstractionAddress: Hexadecimal;
   spender: Hexadecimal;
 };

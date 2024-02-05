@@ -1,6 +1,6 @@
 import { Args, Field, ObjectType, Query, Resolver } from '@nestjs/graphql';
 import { GetBalanceService } from 'src/services/GetBalanceService';
-import { AllCurrency, Currency } from 'src/types/currency';
+import { AllCurrency } from 'src/types/currency';
 import { BigIntScalar } from '../scalars/BigInt';
 import { HexadecimalScalar } from '../scalars/Hexadecimal';
 import { Hexadecimal } from 'src/types/hexadecimal';
@@ -20,7 +20,7 @@ export class GetBalanceResolver {
   @Query(() => GetBalanceOutput)
   async balanceByCurrency(
     @Args('address', { type: () => HexadecimalScalar }) address: Hexadecimal,
-    @Args('currency', { type: () => AllCurrency }) currency: Currency,
+    @Args('currency', { type: () => AllCurrency }) currency: AllCurrency,
   ) {
     return await this.getBalanceService.execute({
       address,

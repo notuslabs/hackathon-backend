@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { ERC20 } from 'src/abis/ERC20';
-import { Currency, currencyDecimals } from 'src/types/currency';
+import { AllCurrency, currencyDecimals } from 'src/types/currency';
 import { Hexadecimal } from 'src/types/hexadecimal';
 import { alchemyClient } from 'src/utils/clients';
 import { currencyToTokenAddress } from 'src/utils/currencyToTokenAddress';
 import { formatUnits, getContract } from 'viem';
 
 export type GetBalanceInput = {
-  currency: Currency;
+  currency: AllCurrency;
   address: Hexadecimal;
 };
 
