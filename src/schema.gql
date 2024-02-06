@@ -89,14 +89,17 @@ enum StableCurrency {
 type TransactionModel {
   timestamp: Date
   type: String!
-  amount: BigInt!
+  amount: String!
   asset: String!
   transactionId: String
-  status: String!
 }
 
 """Date custom scalar type"""
 scalar Date
+
+type GetTransactionHistoryOutput {
+  transactions: [TransactionModel!]!
+}
 
 input UserOperationInput {
   callData: Hexadecimal!
@@ -115,11 +118,7 @@ input UserOperationInput {
 type Query {
   balanceByCurrency(address: Hexadecimal!, currency: Asset!): GetBalanceOutput!
   accountAbstractionAddressByOwner(owner: Hexadecimal!): GetAccountAbstractionAddressByOwnerOutput!
-
-  """
-  Just a dummy resolver to include the "TransactionModel" type in the schema
-  """
-  dummyTransaction: [TransactionModel!]! @deprecated(reason: "This is a dummy resolver, it doesn't work")
+  transactions(address: Hexadecimal!): GetTransactionHistoryOutput!
 }
 
 """All assets (Union of Currency & InvestmentAsset)"""
