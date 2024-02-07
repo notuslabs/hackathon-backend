@@ -54,14 +54,14 @@ export class GetTransactionHistoryService {
 			}),
 		]);
 
-		inTransfers.transfers.push(...outTransfers.transfers);
-
-		const transfers = inTransfers.transfers.sort((a, b) => {
-			return (
-				new Date(b.metadata.blockTimestamp).getTime() -
-				new Date(a.metadata.blockTimestamp).getTime()
-			);
-		});
+		const transfers = inTransfers.transfers
+			.concat(outTransfers.transfers)
+			.sort((a, b) => {
+				return (
+					new Date(b.metadata.blockTimestamp).getTime() -
+					new Date(a.metadata.blockTimestamp).getTime()
+				);
+			});
 
 		const transactions = transfers.map((transfer) => ({
 			amount: formatUnits(
@@ -111,3 +111,7 @@ export class GetTransactionHistoryService {
 		return type;
 	}
 }
+
+new GetTransactionHistoryService().execute({
+	address: "0xE592427A0AEce92De3Edee1F18E0157C05861564",
+});
