@@ -54,14 +54,14 @@ export class GetTransactionHistoryService {
 			}),
 		]);
 
-		const transfers = inTransfers.transfers
-			.concat(outTransfers.transfers)
-			.sort((a, b) => {
-				return (
-					new Date(b.metadata.blockTimestamp).getTime() -
-					new Date(a.metadata.blockTimestamp).getTime()
-				);
-			});
+		inTransfers.transfers.push(...outTransfers.transfers);
+
+		const transfers = inTransfers.transfers.sort((a, b) => {
+			return (
+				new Date(b.metadata.blockTimestamp).getTime() -
+				new Date(a.metadata.blockTimestamp).getTime()
+			);
+		});
 
 		const transactions = transfers.map((transfer) => ({
 			amount: formatUnits(
