@@ -1,7 +1,7 @@
-import "dotenv/config";
 import { NestFactory } from "@nestjs/core";
-import { AppModule } from "./app.module";
 import * as Sentry from "@sentry/node";
+import "dotenv/config";
+import { AppModule } from "./app.module";
 
 Sentry.init({
 	dsn: process.env.SENTRY_DSN,

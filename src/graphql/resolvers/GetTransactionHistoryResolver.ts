@@ -1,8 +1,8 @@
 import { Args, Field, ObjectType, Query, Resolver } from "@nestjs/graphql";
-import { TransactionModel } from "../models/TransactionModel";
 import { GetTransactionHistoryService } from "src/services/GetTransactionHistoryService";
-import { HexadecimalScalar } from "../scalars/Hexadecimal";
 import { Hexadecimal } from "src/types/hexadecimal";
+import { TransactionModel } from "../models/TransactionModel";
+import { HexadecimalScalar } from "../scalars/Hexadecimal";
 
 @ObjectType()
 class GetTransactionHistoryOutput {

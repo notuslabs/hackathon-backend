@@ -1,8 +1,8 @@
 import { Catch, HttpException } from "@nestjs/common";
 import { GqlExceptionFilter } from "@nestjs/graphql";
+import * as Sentry from "@sentry/node";
 import { GraphQLError } from "graphql";
 import { Exception } from "./shared/Exception";
-import * as Sentry from "@sentry/node";
 import { UnexpectedException } from "./shared/UnexpectedException";
 
 @Catch()

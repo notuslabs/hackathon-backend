@@ -1,4 +1,18 @@
+import { Injectable } from "@nestjs/common";
+import { AlchemyLightAccountABI } from "src/abis/AlchemyLightAccount";
+import { ERC4337 } from "src/abis/ERC4337";
+import { SimpleAccountFactoryAbi } from "src/abis/SimpleAccountFactory";
+import {
+	CHAINLESS_PAYMASTER_ADDRESS,
+	ENTRY_POINT_ADDRESS,
+	FACTORY_ADDRESS,
+} from "src/constants";
+import { UnexpectedException } from "src/shared/UnexpectedException";
+import { StableCurrency, currencyDecimals } from "src/types/currency";
 import { Hexadecimal } from "src/types/hexadecimal";
+import { UserOperation } from "src/types/useroperation";
+import { alchemyClient, investmentWalletClient } from "src/utils/clients";
+import { currencyToTokenAddress } from "src/utils/currencyToTokenAddress";
 import {
 	concatHex,
 	encodeAbiParameters,
@@ -7,20 +21,6 @@ import {
 	keccak256,
 	parseUnits,
 } from "viem";
-import { AlchemyLightAccountABI } from "src/abis/AlchemyLightAccount";
-import {
-	CHAINLESS_PAYMASTER_ADDRESS,
-	ENTRY_POINT_ADDRESS,
-	FACTORY_ADDRESS,
-} from "src/constants";
-import { SimpleAccountFactoryAbi } from "src/abis/SimpleAccountFactory";
-import { Injectable } from "@nestjs/common";
-import { ERC4337 } from "src/abis/ERC4337";
-import { UserOperation } from "src/types/useroperation";
-import { alchemyClient, investmentWalletClient } from "src/utils/clients";
-import { UnexpectedException } from "src/shared/UnexpectedException";
-import { StableCurrency, currencyDecimals } from "src/types/currency";
-import { currencyToTokenAddress } from "src/utils/currencyToTokenAddress";
 
 export type CreateGenericUserOperationInput = {
 	from: Hexadecimal;
@@ -128,12 +128,16 @@ export class CreateGenericUserOperationService {
 
 	async getPaymasterAndData() {
 		const priceRequest = await fetch(
-			`https://${process.env.COINGECKO_API_KEY ? "pro-" : ""}api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=brl&precision=18`,
-			(process.env.COINGECKO_API_KEY ? {
-				headers: {
-					"x-cg-pro-api-key": process.env.COINGECKO_API_KEY
-				}
-			} : {})
+			`https://${
+				process.env.COINGECKO_API_KEY ? "pro-" : ""
+			}api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=brl&precision=18`,
+			process.env.COINGECKO_API_KEY
+				? {
+						headers: {
+							"x-cg-pro-api-key": process.env.COINGECKO_API_KEY,
+						},
+				  }
+				: {},
 		);
 		const priceJSON = await priceRequest.json();
 		const priceUint256 = parseUnits(

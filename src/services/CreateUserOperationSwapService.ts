@@ -1,7 +1,7 @@
-import { Hexadecimal } from "src/types/hexadecimal";
 import { Injectable } from "@nestjs/common";
-import { CreateGenericUserOperationService } from "src/services/CreateGenericUserOperationService";
 import { SWAP_PROVIDER } from "src/constants";
+import { CreateGenericUserOperationService } from "src/services/CreateGenericUserOperationService";
+import { Hexadecimal } from "src/types/hexadecimal";
 
 export type CreateUserOperationSwapInput = {
 	from: Hexadecimal;

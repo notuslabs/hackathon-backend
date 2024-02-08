@@ -7,11 +7,14 @@ import { Exception } from "src/shared/Exception";
  * @returns the max bigint in the list
  */
 export const bigIntMax = (...args: bigint[]) => {
-  if (!args.length) {
-    throw new Exception('bigIntMax requires at least one argument', 'invalid_bigint_max');
-  }
+	if (!args.length) {
+		throw new Exception(
+			"bigIntMax requires at least one argument",
+			"invalid_bigint_max",
+		);
+	}
 
-  return args.reduce((m, c) => (m > c ? m : c));
+	return args.reduce((m, c) => (m > c ? m : c));
 };
 
 /**
@@ -28,5 +31,5 @@ export const bigIntMax = (...args: bigint[]) => {
  * @returns the base multiplied by the percent and divided by 100
  */
 export const bigIntPercent = (base: bigint, percent: bigint) => {
-  return (BigInt(base) * percent) / 100n;
+	return (BigInt(base) * percent) / 100n;
 };

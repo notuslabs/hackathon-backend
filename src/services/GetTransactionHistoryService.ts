@@ -1,18 +1,18 @@
 import { Injectable } from "@nestjs/common";
-import { alchemyClient } from "../utils/clients";
 import {
 	AssetTransfersCategory,
-	AssetTransfersWithMetadataResponse,
 	type AssetTransfersParams,
+	AssetTransfersWithMetadataResponse,
 	AssetTransfersWithMetadataResult,
 } from "alchemy-sdk";
-import { Hexadecimal } from "src/types/hexadecimal";
-import { TransactionModel } from "src/graphql/models/TransactionModel";
 import { CHAINLESS_PERMISSIONED_SWAP_ADDRESS } from "src/constants";
+import { TransactionModel } from "src/graphql/models/TransactionModel";
+import { UnexpectedException } from "src/shared/UnexpectedException";
+import { Hexadecimal } from "src/types/hexadecimal";
 import { tokenToSymbolList } from "src/utils/currencyToTokenAddress";
 import { equalsIgnoringCase } from "src/utils/equalsIgnoreCase";
 import { formatUnits } from "viem";
-import { UnexpectedException } from "src/shared/UnexpectedException";
+import { alchemyClient } from "../utils/clients";
 
 export type GetAssetTransfersMethod = {
 	Method: "alchemy_getAssetTransfers";

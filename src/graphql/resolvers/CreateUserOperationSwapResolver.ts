@@ -6,11 +6,11 @@ import {
 	ObjectType,
 	Resolver,
 } from "@nestjs/graphql";
+import { CreateUserOperationSwapService } from "src/services/CreateUserOperationSwapService";
 import { Hexadecimal } from "src/types/hexadecimal";
 import { chain } from "src/utils/clients";
 import { UserOperationModel } from "../models/UserOperationModel";
 import { HexadecimalScalar } from "../scalars/Hexadecimal";
-import { CreateUserOperationSwapService } from "src/services/CreateUserOperationSwapService";
 
 @ObjectType()
 export class CreateUserOperationSwapOutput {
@@ -33,12 +33,11 @@ export class CreateUserOperationSwapResolver {
 		@Args("from", { type: () => HexadecimalScalar }) from: Hexadecimal,
 		@Args("swapData", { type: () => HexadecimalScalar }) swapData: Hexadecimal,
 	): Promise<CreateUserOperationSwapOutput> {
-		const userOperation =
-			await this.createUserOperationSwapService.execute({
-				accountAbstractionAddress,
-				swapData,
-				from,
-			});
+		const userOperation = await this.createUserOperationSwapService.execute({
+			accountAbstractionAddress,
+			swapData,
+			from,
+		});
 
 		return {
 			userOperation,
