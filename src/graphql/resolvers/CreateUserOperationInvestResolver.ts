@@ -1,25 +1,10 @@
-import {
-	Args,
-	Field,
-	Int,
-	Mutation,
-	ObjectType,
-	Resolver,
-} from "@nestjs/graphql";
+import { Args, Mutation, Resolver } from "@nestjs/graphql";
 import { CreateUserOperationInvestService } from "src/services/CreateUserOperationInvestService";
 import { InvestCurrency, StableCurrency } from "src/types/currency";
 import { Hexadecimal } from "src/types/hexadecimal";
 import { chain } from "src/utils/clients";
-import { UserOperationModel } from "../models/UserOperationModel";
 import { HexadecimalScalar } from "../scalars/Hexadecimal";
-
-@ObjectType()
-export class CreateUserOperationInvestOutput {
-	@Field(() => UserOperationModel)
-	userOperation: UserOperationModel;
-	@Field(() => Int)
-	chainId: number;
-}
+import { CreateUserOperationOutput } from "./CreateUserOperationWithdrawInvestmentResolver";
 
 @Resolver()
 export class CreateUserOperationInvestResolver {
@@ -27,7 +12,7 @@ export class CreateUserOperationInvestResolver {
 		private createUserOperationInvestService: CreateUserOperationInvestService,
 	) {}
 
-	@Mutation(() => CreateUserOperationInvestOutput)
+	@Mutation(() => CreateUserOperationOutput)
 	async createUserOperationInvest(
 		@Args("accountAbstractionAddress", { type: () => HexadecimalScalar })
 		accountAbstractionAddress: Hexadecimal,
@@ -36,17 +21,18 @@ export class CreateUserOperationInvestResolver {
 		@Args("from", { type: () => HexadecimalScalar }) from: Hexadecimal,
 		@Args("asset", { type: () => InvestCurrency })
 		asset: InvestCurrency,
-	): Promise<CreateUserOperationInvestOutput> {
-		const userOperation = await this.createUserOperationInvestService.execute({
-			accountAbstractionAddress,
-			amount,
-			currency,
-			from,
-			asset,
-		});
+	): Promise<CreateUserOperationOutput> {
+		const userOperationData =
+			await this.createUserOperationInvestService.execute({
+				accountAbstractionAddress,
+				amount,
+				currency,
+				from,
+				asset,
+			});
 
 		return {
-			userOperation,
+			...userOperationData,
 			chainId: chain.id,
 		};
 	}

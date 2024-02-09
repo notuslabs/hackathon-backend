@@ -7,16 +7,26 @@ import {
 	Resolver,
 } from "@nestjs/graphql";
 import { CreateUserOperationWithdrawInvestmentService } from "src/services/CreateUserOperationWithdrawInvestmentService";
-import { InvestCurrency, StableCurrency } from "src/types/currency";
+import {
+	AllCurrency,
+	InvestCurrency,
+	StableCurrency,
+} from "src/types/currency";
 import { Hexadecimal } from "src/types/hexadecimal";
 import { chain } from "src/utils/clients";
 import { UserOperationModel } from "../models/UserOperationModel";
 import { HexadecimalScalar } from "../scalars/Hexadecimal";
 
 @ObjectType()
-export class CreateUserOperationWithdrawInvestmentOutput {
+export class CreateUserOperationOutput {
 	@Field(() => UserOperationModel)
 	userOperation: UserOperationModel;
+	@Field(() => String)
+	maxGasFeeNative: string;
+	@Field(() => String)
+	maxGasFeeToken: string;
+	@Field(() => AllCurrency)
+	payingToken: AllCurrency;
 	@Field(() => Int)
 	chainId: number;
 }
@@ -27,7 +37,7 @@ export class CreateUserOperationWithdrawInvestmentResolver {
 		private createUserOperationWithdrawInvestmentService: CreateUserOperationWithdrawInvestmentService,
 	) {}
 
-	@Mutation(() => CreateUserOperationWithdrawInvestmentOutput)
+	@Mutation(() => CreateUserOperationOutput)
 	async createUserOperationWithdrawInvestment(
 		@Args("accountAbstractionAddress", { type: () => HexadecimalScalar })
 		accountAbstractionAddress: Hexadecimal,
@@ -36,8 +46,8 @@ export class CreateUserOperationWithdrawInvestmentResolver {
 		@Args("from", { type: () => HexadecimalScalar }) from: Hexadecimal,
 		@Args("asset", { type: () => InvestCurrency })
 		asset: InvestCurrency,
-	): Promise<CreateUserOperationWithdrawInvestmentOutput> {
-		const userOperation =
+	): Promise<CreateUserOperationOutput> {
+		const userOperationData =
 			await this.createUserOperationWithdrawInvestmentService.execute({
 				accountAbstractionAddress,
 				amount,
@@ -47,7 +57,7 @@ export class CreateUserOperationWithdrawInvestmentResolver {
 			});
 
 		return {
-			userOperation,
+			...userOperationData,
 			chainId: chain.id,
 		};
 	}

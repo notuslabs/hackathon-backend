@@ -17,6 +17,12 @@ import { HexadecimalScalar } from "../scalars/Hexadecimal";
 export class CreateUserOperationERC20ApproveOutput {
 	@Field(() => UserOperationModel, { nullable: true })
 	userOperation?: UserOperationModel;
+	@Field(() => String)
+	maxGasFeeNative: string;
+	@Field(() => String)
+	maxGasFeeToken: string;
+	@Field(() => AllCurrency)
+	payingToken: AllCurrency;
 	@Field(() => Int)
 	chainId: number;
 }
@@ -35,7 +41,7 @@ export class CreateUserOperationERC20ApproveResolver {
 		@Args("asset", { type: () => AllCurrency }) currency: AllCurrency,
 		@Args("spender", { type: () => HexadecimalScalar }) spender: Hexadecimal,
 	): Promise<CreateUserOperationERC20ApproveOutput> {
-		const userOperation =
+		const userOperationData =
 			await this.createUserOperationERC20ApproveService.execute({
 				accountAbstractionAddress,
 				currency,
@@ -44,7 +50,10 @@ export class CreateUserOperationERC20ApproveResolver {
 			});
 
 		return {
-			userOperation,
+			userOperation: userOperationData?.userOperation,
+			maxGasFeeNative: "0",
+			maxGasFeeToken: "0",
+			payingToken: AllCurrency.BRZ,
 			chainId: chain.id,
 		};
 	}

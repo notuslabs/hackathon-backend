@@ -8,7 +8,7 @@ import {
 	FACTORY_ADDRESS,
 } from "src/constants";
 import { UnexpectedException } from "src/shared/UnexpectedException";
-import { StableCurrency, currencyDecimals } from "src/types/currency";
+import { AllCurrency, currencyDecimals } from "src/types/currency";
 import { Hexadecimal } from "src/types/hexadecimal";
 import { UserOperation } from "src/types/useroperation";
 import { alchemyClient, investmentWalletClient } from "src/utils/clients";
@@ -17,6 +17,7 @@ import {
 	concatHex,
 	encodeAbiParameters,
 	encodeFunctionData,
+	formatUnits,
 	getContract,
 	keccak256,
 	parseUnits,
@@ -100,12 +101,16 @@ export class CreateGenericUserOperationService {
 			]);
 		}
 
+		const payingToken = AllCurrency.BRZ;
+		const { priceToken, paymasterAndData } =
+			await this.getPaymasterAndData(payingToken);
+
 		const userOperation: UserOperation = {
 			callData: callData,
 			sender: accountAbstractionAddress,
 			signature: "0x" as Hexadecimal,
 			initCode,
-			paymasterAndData: await this.getPaymasterAndData(),
+			paymasterAndData,
 			maxFeePerGas: baseFeePlusFiftyPercent + prioFeePlusFivePercent,
 			maxPriorityFeePerGas: prioFeePlusFivePercent,
 			nonce,
@@ -123,10 +128,25 @@ export class CreateGenericUserOperationService {
 		userOperation.preVerificationGas = preVerificationGas;
 		userOperation.verificationGasLimit = verificationGasLimit;
 
-		return userOperation;
+		const maxGasFeeNative =
+			userOperation.maxFeePerGas *
+			(callGasLimit + preVerificationGas + verificationGasLimit);
+		const maxGasFeeToken =
+			(maxGasFeeNative * priceToken) /
+			10n ** BigInt(currencyDecimals[payingToken]);
+
+		return {
+			userOperation,
+			maxGasFeeNative: formatUnits(maxGasFeeNative, 18),
+			maxGasFeeToken: formatUnits(
+				maxGasFeeToken,
+				currencyDecimals[payingToken],
+			),
+			payingToken,
+		};
 	}
 
-	async getPaymasterAndData() {
+	async getPaymasterAndData(stableCurrency: AllCurrency) {
 		const priceRequest = await fetch(
 			`https://${
 				process.env.COINGECKO_API_KEY ? "pro-" : ""
@@ -142,9 +162,9 @@ export class CreateGenericUserOperationService {
 		const priceJSON = await priceRequest.json();
 		const priceUint256 = parseUnits(
 			priceJSON["matic-network"].brl.toString(),
-			currencyDecimals[StableCurrency.BRZ],
+			currencyDecimals[stableCurrency],
 		);
-		const payingToken = currencyToTokenAddress(StableCurrency.BRZ);
+		const payingToken = currencyToTokenAddress(stableCurrency);
 		const validAfter = Date.now();
 		const validUntil = Date.now() + 5 * 60 * 1000;
 		const paymasterData = encodeAbiParameters(
@@ -166,6 +186,7 @@ export class CreateGenericUserOperationService {
 			signature,
 			`0x${"0".repeat(62)}`,
 		]);
-		return paymasterAndData;
+
+		return { priceToken: priceUint256, paymasterAndData };
 	}
 }

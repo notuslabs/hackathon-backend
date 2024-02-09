@@ -2,14 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type GetBalanceOutput {
-  balance: BigInt!
-  formattedBalance: String!
-}
-
-"""Numbers with no precision loss"""
-scalar BigInt
-
 type UserOperationModel {
   callData: Hexadecimal!
   sender: Hexadecimal!
@@ -27,43 +19,69 @@ type UserOperationModel {
 """Any string that starts with 0x"""
 scalar Hexadecimal
 
+"""Numbers with no precision loss"""
+scalar BigInt
+
 type CreateUserOperationERC20ApproveOutput {
   userOperation: UserOperationModel
+  maxGasFeeNative: String!
+  maxGasFeeToken: String!
+  payingToken: Asset!
   chainId: Int!
 }
 
-type CreateUserOperationTransferOutput {
+"""All assets (Union of Currency & InvestmentAsset)"""
+enum Asset {
+  USDC
+  BRZ
+  BIB01
+  AAVE
+  GHST
+  APE
+  BAL
+  LINK
+  COMP
+  CRV
+  DAI
+  FRAX
+  LDO
+  MIMATIC
+  MKR
+  EURS
+  SD
+  SUSHI
+  SNX
+  TETU
+  THX
+  TEL
+  USDT
+  GRT
+  SAND
+  UNI
+  WBTC
+  WETH
+  WMATIC
+  RENBTC
+  YFI
+  STG
+  GNS
+  MVX
+  DHT
+  POOL
+  WOO
+  FXS
+  QUICK
+  STMATIC
+  WSTETH
+  NEX
+}
+
+type CreateUserOperationOutput {
   userOperation: UserOperationModel!
+  maxGasFeeNative: String!
+  maxGasFeeToken: String!
+  payingToken: Asset!
   chainId: Int!
-}
-
-type CreateUserOperationInvestOutput {
-  userOperation: UserOperationModel!
-  chainId: Int!
-}
-
-type CreateUserOperationSwapOutput {
-  userOperation: UserOperationModel!
-  chainId: Int!
-}
-
-type CreateUserOperationWithdrawInvestmentOutput {
-  userOperation: UserOperationModel!
-  chainId: Int!
-}
-
-type GetAccountAbstractionAddressByOwnerOutput {
-  accountAbstractionAddress: Hexadecimal!
-}
-
-type ExecuteUserOperationOutput {
-  operationHashes: [Hexadecimal!]!
-}
-
-type QuoteModel {
-  quoteId: String!
-  price: Float!
-  expiresAt: String!
 }
 
 type DepositModel {
@@ -72,18 +90,17 @@ type DepositModel {
   expiresAt: String!
 }
 
-type WithdrawModel {
-  blockchainDepositAddress: Hexadecimal!
-  expiresAt: String!
-  qrCode: String!
-  depositCurrency: StableCurrency!
-  depositAmount: Float!
+type ExecuteUserOperationOutput {
+  operationHashes: [Hexadecimal!]!
 }
 
-"""The supported currencies"""
-enum StableCurrency {
-  BRZ
-  USDC
+type GetAccountAbstractionAddressByOwnerOutput {
+  accountAbstractionAddress: Hexadecimal!
+}
+
+type GetBalanceOutput {
+  balance: BigInt!
+  formattedBalance: String!
 }
 
 type TransactionModel {
@@ -99,6 +116,26 @@ scalar Date
 
 type GetTransactionHistoryOutput {
   transactions: [TransactionModel!]!
+}
+
+type QuoteModel {
+  quoteId: String!
+  price: Float!
+  expiresAt: String!
+}
+
+type WithdrawModel {
+  blockchainDepositAddress: Hexadecimal!
+  expiresAt: String!
+  qrCode: String!
+  depositCurrency: StableCurrency!
+  depositAmount: Float!
+}
+
+"""The supported currencies"""
+enum StableCurrency {
+  BRZ
+  USDC
 }
 
 input UserOperationInput {
@@ -121,19 +158,12 @@ type Query {
   transactions(address: Hexadecimal!): GetTransactionHistoryOutput!
 }
 
-"""All assets (Union of Currency & InvestmentAsset)"""
-enum Asset {
-  USDC
-  BRZ
-  BIB01
-}
-
 type Mutation {
   createUserOperationERC20Approve(accountAbstractionAddress: Hexadecimal!, from: Hexadecimal!, asset: Asset!, spender: Hexadecimal!): CreateUserOperationERC20ApproveOutput!
-  createUserOperationTransfer(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, to: Hexadecimal!): CreateUserOperationTransferOutput!
-  createUserOperationInvest(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, asset: InvestmentAsset!): CreateUserOperationInvestOutput!
-  createUserOperationSwap(accountAbstractionAddress: Hexadecimal!, from: Hexadecimal!, swapData: Hexadecimal!): CreateUserOperationSwapOutput!
-  createUserOperationWithdrawInvestment(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, asset: InvestmentAsset!): CreateUserOperationWithdrawInvestmentOutput!
+  createUserOperationTransfer(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, to: Hexadecimal!): CreateUserOperationOutput!
+  createUserOperationInvest(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, asset: InvestmentAsset!): CreateUserOperationOutput!
+  createUserOperationSwap(accountAbstractionAddress: Hexadecimal!, from: Hexadecimal!, swapData: Hexadecimal!): CreateUserOperationOutput!
+  createUserOperationWithdrawInvestment(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, asset: InvestmentAsset!): CreateUserOperationOutput!
   userOperationExecute(userOperations: [UserOperationInput!]!): ExecuteUserOperationOutput!
   requestDepositQuote(from: FiatCurrency!, to: StableCurrency!, amount: Float!): QuoteModel!
   requestWithdrawQuote(from: StableCurrency!, to: FiatCurrency!, amount: Float!): QuoteModel!
