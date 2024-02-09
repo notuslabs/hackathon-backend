@@ -11,12 +11,14 @@ export type ExecuteUserOperationInput = {
 export class ExecuteUserOperationService {
 	async execute({ userOperations }: ExecuteUserOperationInput) {
 		const userOpHashes = await Promise.all(
-			userOperations.map((userOperation) =>
-				alchemyClient.sendUserOperation({
-					userOperation,
-					entryPoint: ENTRY_POINT_ADDRESS,
-				}),
-			),
+			userOperations.map(async (userOperation) => {
+				return alchemyClient.waitForUserOperationReceipt({
+					hash: await alchemyClient.sendUserOperation({
+						userOperation,
+						entryPoint: ENTRY_POINT_ADDRESS,
+					}),
+				});
+			}),
 		);
 
 		return userOpHashes;

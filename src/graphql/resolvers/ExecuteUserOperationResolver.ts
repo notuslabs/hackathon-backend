@@ -26,7 +26,7 @@ export class ExecuteUserOperationResolver {
 		});
 
 		return {
-			operationHashes,
+			operationHashes: operationHashes.map(op => op.userOpHash),
 		};
 	}
 }
