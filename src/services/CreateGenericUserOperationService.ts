@@ -164,6 +164,7 @@ export class CreateGenericUserOperationService {
 			CHAINLESS_PAYMASTER_ADDRESS,
 			paymasterData,
 			signature,
+			`0x${"0".repeat(62)}`,
 		]);
 		return paymasterAndData;
 	}
