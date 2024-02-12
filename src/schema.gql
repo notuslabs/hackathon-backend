@@ -24,9 +24,9 @@ scalar BigInt
 
 type CreateUserOperationERC20ApproveOutput {
   userOperation: UserOperationModel
-  maxGasFeeNative: String!
-  maxGasFeeToken: String!
-  payingToken: Asset!
+  maxGasFeeNative: String
+  maxGasFeeToken: String
+  payingToken: Asset
   chainId: Int!
 }
 

@@ -17,12 +17,12 @@ import { HexadecimalScalar } from "../scalars/Hexadecimal";
 export class CreateUserOperationERC20ApproveOutput {
 	@Field(() => UserOperationModel, { nullable: true })
 	userOperation?: UserOperationModel;
-	@Field(() => String)
-	maxGasFeeNative: string;
-	@Field(() => String)
-	maxGasFeeToken: string;
-	@Field(() => AllCurrency)
-	payingToken: AllCurrency;
+	@Field(() => String, { nullable: true })
+	maxGasFeeNative?: string;
+	@Field(() => String, { nullable: true })
+	maxGasFeeToken?: string;
+	@Field(() => AllCurrency, { nullable: true })
+	payingToken?: AllCurrency;
 	@Field(() => Int)
 	chainId: number;
 }
@@ -49,11 +49,14 @@ export class CreateUserOperationERC20ApproveResolver {
 				spender,
 			});
 
+		if (userOperationData) {
+			return {
+				...userOperationData,
+				chainId: chain.id,
+			}
+		}
+
 		return {
-			userOperation: userOperationData?.userOperation,
-			maxGasFeeNative: "0",
-			maxGasFeeToken: "0",
-			payingToken: AllCurrency.BRZ,
 			chainId: chain.id,
 		};
 	}
