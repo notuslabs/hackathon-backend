@@ -98,7 +98,7 @@ type UserOperationReceipt {
 }
 
 type ExecuteUserOperationOutput {
-  operationHashes: [Hexadecimal!]! @deprecated(reason: "Same information is now available in `userOpReceipts[].userOpHash`")
+  operationHashes: [Hexadecimal!]! @deprecated(reason: "Same information is now available in *userOpReceipts[].userOpHash*")
   userOpReceipts: [UserOperationReceipt!]!
 }
 
