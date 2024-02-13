@@ -3,11 +3,29 @@ import { ExecuteUserOperationService } from "src/services/ExecuteUserOperationSe
 import { Hexadecimal } from "src/types/hexadecimal";
 import { UserOperationModel } from "../models/UserOperationModel";
 import { HexadecimalScalar } from "../scalars/Hexadecimal";
+import { formatUnits } from "viem";
+
+@ObjectType()
+export class UserOperationReceipt {
+	@Field(() => Boolean)
+	success: boolean;
+	@Field(() => HexadecimalScalar)
+	userOpHash: Hexadecimal;
+	@Field(() => HexadecimalScalar)
+	transactionHash: Hexadecimal;
+	@Field(() => String)
+	gasUsedNative: string;
+}
 
 @ObjectType()
 export class ExecuteUserOperationOutput {
-	@Field(() => [HexadecimalScalar])
+	@Field(() => [HexadecimalScalar], {
+		deprecationReason:
+			"Same information is now available in `userOpReceipts[].userOpHash`",
+	})
 	operationHashes: Hexadecimal[];
+	@Field(() => [UserOperationReceipt])
+	userOpReceipts: UserOperationReceipt[];
 }
 
 @Resolver()
@@ -21,12 +39,24 @@ export class ExecuteUserOperationResolver {
 		@Args("userOperations", { type: () => [UserOperationModel] })
 		userOperations: UserOperationModel[],
 	): Promise<ExecuteUserOperationOutput> {
-		const operationHashes = await this.executeUserOperationService.execute({
-			userOperations,
-		});
+		const userOperationsReceipts =
+			await this.executeUserOperationService.execute({
+				userOperations,
+			});
+
+		const receipts = userOperationsReceipts.map((userOp) => ({
+			success: userOp.success,
+			userOpHash: userOp.userOpHash,
+			transactionHash: userOp.receipt.transactionHash,
+			gasUsedNative: formatUnits(
+				userOp.actualGasUsed * userOp.actualGasCost,
+				18,
+			),
+		}));
 
 		return {
-			operationHashes: operationHashes.map(op => op.userOpHash),
+			operationHashes: receipts.map((op) => op.userOpHash),
+			userOpReceipts: receipts,
 		};
 	}
 }

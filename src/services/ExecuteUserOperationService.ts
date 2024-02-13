@@ -20,7 +20,7 @@ export class ExecuteUserOperationService {
 			});
 		}
 
-		const userOpHashes = await Promise.all(
+		const userOpReceipts = await Promise.all(
 			userOperations.map(async (userOperation) => {
 				return alchemyClient.waitForUserOperationReceipt({
 					hash: await alchemyClient.sendUserOperation({
@@ -31,6 +31,6 @@ export class ExecuteUserOperationService {
 			}),
 		);
 
-		return userOpHashes;
+		return userOpReceipts;
 	}
 }

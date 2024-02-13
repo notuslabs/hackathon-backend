@@ -90,8 +90,16 @@ type DepositModel {
   expiresAt: String!
 }
 
+type UserOperationReceipt {
+  success: Boolean!
+  userOpHash: Hexadecimal!
+  transactionHash: Hexadecimal!
+  gasUsedNative: String!
+}
+
 type ExecuteUserOperationOutput {
-  operationHashes: [Hexadecimal!]!
+  operationHashes: [Hexadecimal!]! @deprecated(reason: "Same information is now available in `userOpReceipts[].userOpHash`")
+  userOpReceipts: [UserOperationReceipt!]!
 }
 
 type GetAccountAbstractionAddressByOwnerOutput {
