@@ -48,10 +48,7 @@ export class ExecuteUserOperationResolver {
 			success: userOp.success,
 			userOpHash: userOp.userOpHash,
 			transactionHash: userOp.receipt.transactionHash,
-			gasUsedNative: formatUnits(
-				userOp.actualGasUsed * userOp.actualGasCost,
-				18,
-			),
+			gasUsedNative: formatUnits(userOp.actualGasCost, 18),
 		}));
 
 		return {
