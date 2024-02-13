@@ -21,7 +21,7 @@ export class UserOperationReceipt {
 export class ExecuteUserOperationOutput {
 	@Field(() => [HexadecimalScalar], {
 		deprecationReason:
-			"Same information is now available in `userOpReceipts[].userOpHash`",
+			"Same information is now available in *userOpReceipts[].userOpHash*",
 	})
 	operationHashes: Hexadecimal[];
 	@Field(() => [UserOperationReceipt])
