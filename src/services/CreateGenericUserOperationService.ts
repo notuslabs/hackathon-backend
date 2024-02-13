@@ -165,8 +165,8 @@ export class CreateGenericUserOperationService {
 			currencyDecimals[stableCurrency],
 		);
 		const payingToken = currencyToTokenAddress(stableCurrency);
-		const validAfter = Date.now();
-		const validUntil = Date.now() + 5 * 60 * 1000;
+		const validAfter = Math.floor(Date.now() / 1000) - 5 * 60;
+		const validUntil = validAfter + 5 * 60;
 		const paymasterData = encodeAbiParameters(
 			[
 				{ name: "payingToken", type: "address" },
