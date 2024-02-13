@@ -102,14 +102,15 @@ export class CreateGenericUserOperationService {
 		}
 
 		const payingToken = AllCurrency.BRZ;
-		const { priceToken } = await this.getPaymasterAndData(payingToken);
+		const { priceToken, paymasterAndData } =
+			await this.getPaymasterAndData(payingToken);
 
 		const userOperation: UserOperation = {
 			callData: callData,
 			sender: accountAbstractionAddress,
 			signature: "0x" as Hexadecimal,
 			initCode,
-			paymasterAndData: "0x" as Hexadecimal,
+			paymasterAndData,
 			maxFeePerGas: baseFeePlusFiftyPercent + prioFeePlusFivePercent,
 			maxPriorityFeePerGas: prioFeePlusFivePercent,
 			nonce,
