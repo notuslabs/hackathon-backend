@@ -31,6 +31,11 @@ export type CreateGenericUserOperationInput = {
 	customNonce?: bigint;
 };
 
+const DUMMY_PAYMASTER_AND_DATA =
+	"0x0B1d11e34e3e8A6e3958B7657fC335F9505a64A40000000000000000000000004ed141110f6eeeaba9a1df36d8c26f684d2475dc00000000000000000000000000000000ffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000ffffffffffff0000000000000000000000000000000000000000000000000000fffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c";
+const DUMMY_SIGNATURE =
+	"0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c";
+
 @Injectable()
 export class CreateGenericUserOperationService {
 	async execute({
@@ -121,7 +126,11 @@ export class CreateGenericUserOperationService {
 		const { callGasLimit, preVerificationGas, verificationGasLimit } =
 			await alchemyClient.estimateUserOperationGas({
 				entryPoint: ENTRY_POINT_ADDRESS,
-				userOperation: userOperation,
+				userOperation: {
+					...userOperation,
+					signature: DUMMY_SIGNATURE,
+					paymasterAndData: DUMMY_PAYMASTER_AND_DATA,
+				},
 			});
 
 		userOperation.callGasLimit = callGasLimit;
