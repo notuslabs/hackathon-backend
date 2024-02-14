@@ -1,6 +1,6 @@
 import { Args, Mutation, Resolver } from "@nestjs/graphql";
 import { CreateUserOperationTransferService } from "src/services/CreateUserOperationTransferService";
-import { StableCurrency } from "src/types/currency";
+import { AllCurrency, StableCurrency } from "src/types/currency";
 import { Hexadecimal } from "src/types/hexadecimal";
 import { chain } from "src/utils/clients";
 import { HexadecimalScalar } from "../scalars/Hexadecimal";
@@ -20,6 +20,8 @@ export class CreateUserOperationTransferResolver {
 		@Args("currency", { type: () => StableCurrency }) currency: StableCurrency,
 		@Args("from", { type: () => HexadecimalScalar }) from: Hexadecimal,
 		@Args("to", { type: () => HexadecimalScalar }) to: Hexadecimal,
+		@Args("payFeesUsing", { type: () => StableCurrency, nullable: true })
+		payFeesUsing?: StableCurrency,
 	): Promise<CreateUserOperationOutput> {
 		const userOperationData =
 			await this.createUserOperationTransferService.execute({
@@ -28,6 +30,7 @@ export class CreateUserOperationTransferResolver {
 				currency,
 				from,
 				to,
+				payFeesUsing: payFeesUsing ? AllCurrency[payFeesUsing] : undefined,
 			});
 
 		return {

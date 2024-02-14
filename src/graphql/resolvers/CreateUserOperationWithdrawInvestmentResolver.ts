@@ -46,6 +46,8 @@ export class CreateUserOperationWithdrawInvestmentResolver {
 		@Args("from", { type: () => HexadecimalScalar }) from: Hexadecimal,
 		@Args("asset", { type: () => InvestCurrency })
 		asset: InvestCurrency,
+		@Args("payFeesUsing", { type: () => StableCurrency, nullable: true })
+		payFeesUsing?: StableCurrency,
 	): Promise<CreateUserOperationOutput> {
 		const userOperationData =
 			await this.createUserOperationWithdrawInvestmentService.execute({
@@ -54,6 +56,7 @@ export class CreateUserOperationWithdrawInvestmentResolver {
 				currency,
 				from,
 				asset,
+				payFeesUsing: payFeesUsing ? AllCurrency[payFeesUsing] : undefined,
 			});
 
 		return {

@@ -167,11 +167,11 @@ type Query {
 }
 
 type Mutation {
-  createUserOperationERC20Approve(accountAbstractionAddress: Hexadecimal!, from: Hexadecimal!, asset: Asset!, spender: Hexadecimal!): CreateUserOperationERC20ApproveOutput!
-  createUserOperationTransfer(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, to: Hexadecimal!): CreateUserOperationOutput!
-  createUserOperationInvest(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, asset: InvestmentAsset!): CreateUserOperationOutput!
-  createUserOperationSwap(accountAbstractionAddress: Hexadecimal!, from: Hexadecimal!, swapData: Hexadecimal!): CreateUserOperationOutput!
-  createUserOperationWithdrawInvestment(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, asset: InvestmentAsset!): CreateUserOperationOutput!
+  createUserOperationERC20Approve(accountAbstractionAddress: Hexadecimal!, from: Hexadecimal!, asset: Asset!, spender: Hexadecimal!, payFeesUsing: StableCurrency): CreateUserOperationERC20ApproveOutput!
+  createUserOperationTransfer(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, to: Hexadecimal!, payFeesUsing: StableCurrency): CreateUserOperationOutput!
+  createUserOperationInvest(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, asset: InvestmentAsset!, payFeesUsing: StableCurrency): CreateUserOperationOutput!
+  createUserOperationSwap(accountAbstractionAddress: Hexadecimal!, from: Hexadecimal!, swapData: Hexadecimal!, payFeesUsing: StableCurrency): CreateUserOperationOutput!
+  createUserOperationWithdrawInvestment(accountAbstractionAddress: Hexadecimal!, amount: String!, currency: StableCurrency!, from: Hexadecimal!, asset: InvestmentAsset!, payFeesUsing: StableCurrency): CreateUserOperationOutput!
   userOperationExecute(userOperations: [UserOperationInput!]!): ExecuteUserOperationOutput!
   requestDepositQuote(from: FiatCurrency!, to: StableCurrency!, amount: Float!): QuoteModel!
   requestWithdrawQuote(from: StableCurrency!, to: FiatCurrency!, amount: Float!): QuoteModel!

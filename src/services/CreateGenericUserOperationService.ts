@@ -28,7 +28,13 @@ export type CreateGenericUserOperationInput = {
 	accountAbstractionAddress: Hexadecimal;
 	contractAddress: Hexadecimal;
 	encodedFunctionCall: Hexadecimal;
+	payFeesUsing?: AllCurrency;
 	customNonce?: bigint;
+};
+
+const CurrencyToCoingeckoSymbol = {
+	[AllCurrency.USDC]: "usd",
+	[AllCurrency.BRZ]: "brl",
 };
 
 const DUMMY_PAYMASTER_AND_DATA =
@@ -43,6 +49,7 @@ export class CreateGenericUserOperationService {
 		accountAbstractionAddress,
 		contractAddress,
 		encodedFunctionCall,
+		payFeesUsing,
 		customNonce,
 	}: CreateGenericUserOperationInput) {
 		const callData = encodeFunctionData({
@@ -106,7 +113,7 @@ export class CreateGenericUserOperationService {
 			]);
 		}
 
-		const payingToken = AllCurrency.USDC;
+		const payingToken = payFeesUsing ?? AllCurrency.BRZ;
 		const { priceToken, paymasterAndData } =
 			await this.getPaymasterAndData(payingToken);
 
@@ -115,7 +122,7 @@ export class CreateGenericUserOperationService {
 			sender: accountAbstractionAddress,
 			signature: "0x" as Hexadecimal,
 			initCode,
-			paymasterAndData,
+			paymasterAndData: payFeesUsing ? paymasterAndData : "0x",
 			maxFeePerGas: baseFeePlusFiftyPercent + prioFeePlusFivePercent,
 			maxPriorityFeePerGas: prioFeePlusFivePercent,
 			nonce,
@@ -129,7 +136,7 @@ export class CreateGenericUserOperationService {
 				userOperation: {
 					...userOperation,
 					signature: DUMMY_SIGNATURE,
-					paymasterAndData: DUMMY_PAYMASTER_AND_DATA,
+					paymasterAndData: payFeesUsing ? DUMMY_PAYMASTER_AND_DATA : "0x",
 				},
 			});
 
@@ -156,7 +163,7 @@ export class CreateGenericUserOperationService {
 	}
 
 	async getPaymasterAndData(stableCurrency: AllCurrency) {
-		const currency = "usd";
+		const currency = CurrencyToCoingeckoSymbol[stableCurrency];
 		const priceRequest = await fetch(
 			`https://${
 				process.env.COINGECKO_API_KEY ? "pro-" : ""

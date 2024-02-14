@@ -1,7 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { ERC20 } from "src/abis/ERC20";
 import { CreateGenericUserOperationService } from "src/services/CreateGenericUserOperationService";
-import { StableCurrency, currencyDecimals } from "src/types/currency";
+import {
+	AllCurrency,
+	StableCurrency,
+	currencyDecimals,
+} from "src/types/currency";
 import { Hexadecimal } from "src/types/hexadecimal";
 import { currencyToTokenAddress } from "src/utils/currencyToTokenAddress";
 import { encodeFunctionData, parseUnits } from "viem";
@@ -12,6 +16,7 @@ export type CreateUserOperationTransferInput = {
 	currency: StableCurrency;
 	accountAbstractionAddress: Hexadecimal;
 	amount: string;
+	payFeesUsing?: AllCurrency;
 };
 
 @Injectable()
@@ -26,6 +31,7 @@ export class CreateUserOperationTransferService {
 		from,
 		currency,
 		accountAbstractionAddress,
+		payFeesUsing,
 	}: CreateUserOperationTransferInput) {
 		const transferData = encodeFunctionData({
 			abi: ERC20,
@@ -38,6 +44,7 @@ export class CreateUserOperationTransferService {
 			accountAbstractionAddress,
 			contractAddress: currencyToTokenAddress(currency),
 			encodedFunctionCall: transferData,
+			payFeesUsing,
 		});
 	}
 }

@@ -12,6 +12,7 @@ export type CreateUserOperationERC20ApproveInput = {
 	currency: AllCurrency;
 	accountAbstractionAddress: Hexadecimal;
 	spender: Hexadecimal;
+	payFeesUsing?: AllCurrency;
 };
 
 @Injectable()
@@ -25,6 +26,7 @@ export class CreateUserOperationERC20ApproveService {
 		currency,
 		accountAbstractionAddress,
 		spender,
+		payFeesUsing,
 	}: CreateUserOperationERC20ApproveInput) {
 		const currencyContract = getContract({
 			abi: ERC20,
@@ -53,6 +55,7 @@ export class CreateUserOperationERC20ApproveService {
 			accountAbstractionAddress,
 			contractAddress: currencyToTokenAddress(currency),
 			encodedFunctionCall: approveData,
+			payFeesUsing,
 		});
 	}
 }

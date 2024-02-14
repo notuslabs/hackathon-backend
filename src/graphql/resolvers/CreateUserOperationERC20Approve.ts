@@ -7,7 +7,7 @@ import {
 	Resolver,
 } from "@nestjs/graphql";
 import { CreateUserOperationERC20ApproveService } from "src/services/CreateUserOperationERC20ApproveService";
-import { AllCurrency } from "src/types/currency";
+import { AllCurrency, StableCurrency } from "src/types/currency";
 import { Hexadecimal } from "src/types/hexadecimal";
 import { chain } from "src/utils/clients";
 import { UserOperationModel } from "../models/UserOperationModel";
@@ -40,6 +40,8 @@ export class CreateUserOperationERC20ApproveResolver {
 		@Args("from", { type: () => HexadecimalScalar }) from: Hexadecimal,
 		@Args("asset", { type: () => AllCurrency }) currency: AllCurrency,
 		@Args("spender", { type: () => HexadecimalScalar }) spender: Hexadecimal,
+		@Args("payFeesUsing", { type: () => StableCurrency, nullable: true })
+		payFeesUsing?: StableCurrency,
 	): Promise<CreateUserOperationERC20ApproveOutput> {
 		const userOperationData =
 			await this.createUserOperationERC20ApproveService.execute({
@@ -47,13 +49,14 @@ export class CreateUserOperationERC20ApproveResolver {
 				currency,
 				from,
 				spender,
+				payFeesUsing: payFeesUsing ? AllCurrency[payFeesUsing] : undefined,
 			});
 
 		if (userOperationData) {
 			return {
 				...userOperationData,
 				chainId: chain.id,
-			}
+			};
 		}
 
 		return {

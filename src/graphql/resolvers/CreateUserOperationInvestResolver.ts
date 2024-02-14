@@ -1,6 +1,10 @@
 import { Args, Mutation, Resolver } from "@nestjs/graphql";
 import { CreateUserOperationInvestService } from "src/services/CreateUserOperationInvestService";
-import { InvestCurrency, StableCurrency } from "src/types/currency";
+import {
+	AllCurrency,
+	InvestCurrency,
+	StableCurrency,
+} from "src/types/currency";
 import { Hexadecimal } from "src/types/hexadecimal";
 import { chain } from "src/utils/clients";
 import { HexadecimalScalar } from "../scalars/Hexadecimal";
@@ -21,6 +25,8 @@ export class CreateUserOperationInvestResolver {
 		@Args("from", { type: () => HexadecimalScalar }) from: Hexadecimal,
 		@Args("asset", { type: () => InvestCurrency })
 		asset: InvestCurrency,
+		@Args("payFeesUsing", { type: () => StableCurrency, nullable: true })
+		payFeesUsing?: StableCurrency,
 	): Promise<CreateUserOperationOutput> {
 		const userOperationData =
 			await this.createUserOperationInvestService.execute({
@@ -29,6 +35,7 @@ export class CreateUserOperationInvestResolver {
 				currency,
 				from,
 				asset,
+				payFeesUsing: payFeesUsing ? AllCurrency[payFeesUsing] : undefined,
 			});
 
 		return {

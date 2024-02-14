@@ -3,6 +3,7 @@ import { ChainlessPermissionedSwap } from "src/abis/ChainlessPermissionedSwap";
 import { CHAINLESS_PERMISSIONED_SWAP_ADDRESS } from "src/constants";
 import { CreateGenericUserOperationService } from "src/services/CreateGenericUserOperationService";
 import {
+	AllCurrency,
 	InvestCurrency,
 	StableCurrency,
 	currencyDecimals,
@@ -17,6 +18,7 @@ export type CreateUserOperationWithdrawInvestmentInput = {
 	amount: string;
 	currency: StableCurrency;
 	asset: InvestCurrency;
+	payFeesUsing?: AllCurrency;
 };
 
 @Injectable()
@@ -31,6 +33,7 @@ export class CreateUserOperationWithdrawInvestmentService {
 		currency,
 		asset,
 		accountAbstractionAddress,
+		payFeesUsing,
 	}: CreateUserOperationWithdrawInvestmentInput) {
 		const withdrawData = encodeFunctionData({
 			abi: ChainlessPermissionedSwap,
@@ -48,6 +51,7 @@ export class CreateUserOperationWithdrawInvestmentService {
 			accountAbstractionAddress,
 			contractAddress: CHAINLESS_PERMISSIONED_SWAP_ADDRESS,
 			encodedFunctionCall: withdrawData,
+			payFeesUsing,
 		});
 	}
 }
