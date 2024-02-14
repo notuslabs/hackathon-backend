@@ -106,7 +106,7 @@ export class CreateGenericUserOperationService {
 			]);
 		}
 
-		const payingToken = AllCurrency.BRZ;
+		const payingToken = AllCurrency.USDC;
 		const { priceToken, paymasterAndData } =
 			await this.getPaymasterAndData(payingToken);
 
@@ -156,10 +156,11 @@ export class CreateGenericUserOperationService {
 	}
 
 	async getPaymasterAndData(stableCurrency: AllCurrency) {
+		const currency = "usd";
 		const priceRequest = await fetch(
 			`https://${
 				process.env.COINGECKO_API_KEY ? "pro-" : ""
-			}api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=brl&precision=18`,
+			}api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=${currency}&precision=18`,
 			process.env.COINGECKO_API_KEY
 				? {
 						headers: {
@@ -170,7 +171,7 @@ export class CreateGenericUserOperationService {
 		);
 		const priceJSON = await priceRequest.json();
 		const priceUint256 = parseUnits(
-			priceJSON["matic-network"].brl.toString(),
+			priceJSON["matic-network"][currency].toString(),
 			currencyDecimals[stableCurrency],
 		);
 		const payingToken = currencyToTokenAddress(stableCurrency);
