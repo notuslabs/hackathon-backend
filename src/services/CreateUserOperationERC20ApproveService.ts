@@ -38,7 +38,7 @@ export class CreateUserOperationERC20ApproveService {
 			spender,
 		]);
 
-		if (allowance === max_uint256) {
+		if (allowance > 2n ** 128n - 1n) {
 			return;
 		}
 
