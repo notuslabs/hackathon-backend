@@ -10,7 +10,7 @@ Sentry.init({
 		for (const breadcumb of event.breadcrumbs ?? []) {
 			if (breadcumb.data?.url.includes(process.env.ALCHEMY_HTTP_API_URL)) {
 				breadcumb.data.url =
-					"https://redacted-client-side-url.com/but/this/is/a/polygon/node";
+					"https://redacted-client-side-url.com/but/this/is/a/avalanche/node";
 			}
 		}
 

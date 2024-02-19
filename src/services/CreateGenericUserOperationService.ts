@@ -11,7 +11,7 @@ import { UnexpectedException } from "src/shared/UnexpectedException";
 import { AllCurrency, currencyDecimals } from "src/types/currency";
 import { Hexadecimal } from "src/types/hexadecimal";
 import { UserOperation } from "src/types/useroperation";
-import { alchemyClient, investmentWalletClient } from "src/utils/clients";
+import { alchemyClient, bundlerClient, investmentWalletClient } from "src/utils/clients";
 import { currencyToTokenAddress } from "src/utils/currencyToTokenAddress";
 import {
 	concatHex,
@@ -125,7 +125,7 @@ export class CreateGenericUserOperationService {
 			verificationGasLimit: 0n,
 		};
 		const { callGasLimit, preVerificationGas, verificationGasLimit } =
-			await alchemyClient.estimateUserOperationGas({
+			await bundlerClient.estimateUserOperationGas({
 				entryPoint: ENTRY_POINT_ADDRESS,
 				userOperation: {
 					...userOperation,
