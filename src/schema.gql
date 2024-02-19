@@ -36,44 +36,25 @@ enum Asset {
   BRZ
   BIB01
   AAVE
-  GHST
-  APE
   BAL
   LINK
   COMP
-  CRV
   DAI
   FRAX
-  LDO
   MIMATIC
   MKR
-  EURS
-  SD
   SUSHI
   SNX
-  TETU
-  THX
-  TEL
   USDT
   GRT
-  SAND
   UNI
   WBTC
   WETH
-  WMATIC
-  RENBTC
+  WAVAX
   YFI
   STG
-  GNS
-  MVX
-  DHT
-  POOL
   WOO
   FXS
-  QUICK
-  STMATIC
-  WSTETH
-  NEX
 }
 
 type CreateUserOperationOutput {
