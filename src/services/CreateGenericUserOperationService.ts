@@ -73,13 +73,7 @@ export class CreateGenericUserOperationService {
 			alchemyClient.getBlock({
 				blockTag: "latest",
 			}),
-			alchemyClient.request<{
-				Method: "rundler_maxPriorityFeePerGas";
-				Parameters?: undefined;
-				ReturnType: string;
-			}>({
-				method: "rundler_maxPriorityFeePerGas",
-			}),
+			0,
 			alchemyClient.getBytecode({
 				address: accountAbstractionAddress,
 			}),
