@@ -21,10 +21,10 @@ export class GetTransactionHistoryResolver {
 		@Args("address", { type: () => HexadecimalScalar })
 		address: Hexadecimal,
 	): Promise<GetTransactionHistoryOutput> {
-		const transactions = await this.getTransactionHistoryService.execute({
-			address,
-		});
+		// const transactions = await this.getTransactionHistoryService.execute({
+		// 	address,
+		// });
 
-		return { transactions };
+		return { transactions: [] };
 	}
 }
