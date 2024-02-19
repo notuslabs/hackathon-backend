@@ -11,7 +11,10 @@ import { UnexpectedException } from "src/shared/UnexpectedException";
 import { AllCurrency, currencyDecimals } from "src/types/currency";
 import { Hexadecimal } from "src/types/hexadecimal";
 import { UserOperation } from "src/types/useroperation";
-import { alchemyClient, bundlerClient, investmentWalletClient } from "src/utils/clients";
+import {
+	alchemyClient,
+	investmentWalletClient,
+} from "src/utils/clients";
 import { currencyToTokenAddress } from "src/utils/currencyToTokenAddress";
 import {
 	concatHex,
@@ -22,6 +25,7 @@ import {
 	keccak256,
 	parseUnits,
 } from "viem";
+import { avalanche } from "viem/chains";
 
 export type CreateGenericUserOperationInput = {
 	from: Hexadecimal;
@@ -38,7 +42,7 @@ const CurrencyToCoingeckoSymbol = {
 };
 
 const DUMMY_PAYMASTER_AND_DATA =
-	"0x0B1d11e34e3e8A6e3958B7657fC335F9505a64A40000000000000000000000004ed141110f6eeeaba9a1df36d8c26f684d2475dc00000000000000000000000000000000ffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000ffffffffffff0000000000000000000000000000000000000000000000000000fffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c";
+	`${CHAINLESS_PAYMASTER_ADDRESS}0000000000000000000000004ed141110f6eeeaba9a1df36d8c26f684d2475dc00000000000000000000000000000000ffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000ffffffffffff0000000000000000000000000000000000000000000000000000fffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c`;
 const DUMMY_SIGNATURE =
 	"0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c";
 
@@ -124,23 +128,57 @@ export class CreateGenericUserOperationService {
 			preVerificationGas: 0n,
 			verificationGasLimit: 0n,
 		};
-		const { callGasLimit, preVerificationGas, verificationGasLimit } =
-			await bundlerClient.estimateUserOperationGas({
-				entryPoint: ENTRY_POINT_ADDRESS,
-				userOperation: {
-					...userOperation,
-					signature: DUMMY_SIGNATURE,
-					paymasterAndData: payFeesUsing ? DUMMY_PAYMASTER_AND_DATA : "0x",
-				},
-			});
 
-		userOperation.callGasLimit = callGasLimit;
-		userOperation.preVerificationGas = preVerificationGas;
-		userOperation.verificationGasLimit = verificationGasLimit;
+		const options = {
+			method: "POST",
+			headers: {
+				accept: "application/json",
+				"content-type": "application/json",
+			},
+			body: JSON.stringify({
+				method: "eth_estimateUserOperationGas",
+				params: [
+					{
+						sender: userOperation.sender,
+						nonce: `0x${userOperation.nonce.toString(16)}`,
+						initCode: userOperation.initCode,
+						callData: userOperation.callData,
+						signature: DUMMY_SIGNATURE,
+						paymasterAndData: DUMMY_PAYMASTER_AND_DATA,
+						callGasLimit: "0x0",
+						maxPriorityFeePerGas: "0x0",
+						preVerificationGas: "0x0",
+						verificationGasLimit: "0x0",
+						maxFeePerGas: "0x0",
+					},
+					ENTRY_POINT_ADDRESS,
+				],
+				id: 1695717515,
+				jsonrpc: "2.0",
+				chainId: avalanche.id,
+			}),
+		};
+
+		const a = await fetch("https://bundler.particle.network/", options);
+		const response = await a.json();
+
+		const {
+			maxFeePerGas,
+			maxPriorityFeePerGas,
+			preVerificationGas,
+			verificationGasLimit,
+			callGasLimit,
+		} = response.result;
+
+		userOperation.callGasLimit = BigInt(callGasLimit);
+		userOperation.preVerificationGas = BigInt(preVerificationGas);
+		userOperation.verificationGasLimit = BigInt(verificationGasLimit);
+		userOperation.maxFeePerGas = BigInt(maxFeePerGas);
+		userOperation.maxPriorityFeePerGas = BigInt(maxPriorityFeePerGas);
 
 		const maxGasFeeNative =
 			userOperation.maxFeePerGas *
-			(callGasLimit + preVerificationGas + verificationGasLimit);
+			(userOperation.callGasLimit + userOperation.preVerificationGas + userOperation.verificationGasLimit);
 		const maxGasFeeToken =
 			(maxGasFeeNative * priceToken) /
 			10n ** BigInt(currencyDecimals[payingToken]);
